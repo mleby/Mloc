@@ -1,0 +1,22 @@
+object shortcutHelpFrm: TshortcutHelpFrm
+  Left = 571
+  Height = 529
+  Top = 274
+  Width = 665
+  Caption = 'Shortcut'
+  ClientHeight = 529
+  ClientWidth = 665
+  LCLVersion = '1.6.0.4'
+  object TextMemo: TMemo
+    Left = 0
+    Height = 529
+    Top = 0
+    Width = 665
+    Align = alClient
+    Lines.Strings = (
+      'Memo1'
+    )
+    ReadOnly = True
+    TabOrder = 0
+  end
+end
