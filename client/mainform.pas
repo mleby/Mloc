@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, sqlite3conn, sqldb, DB, FileUtil, LConvEncoding, frmSelectProps, Forms, Controls,
   Graphics, Dialogs, StdCtrls, DBGrids, ActnList, AsyncProcess,
-  ComCtrls, ExtCtrls, Menus, Clipbrd, Buttons, LCLProc, uSettingsForm;
+  ComCtrls, ExtCtrls, Menus, Clipbrd, Buttons, LCLProc, uSettingsForm, uRunUtils;
 
 type
 
@@ -42,7 +42,6 @@ type
     SpeedButton1: TSpeedButton;
     AdvancedPanel: TPanel;
     ResultPopUpMenu: TPopupMenu;
-    runAsyncProcess: TAsyncProcess;
     DataSource1: TDataSource;
     ResultDBGrid: TDBGrid;
     SearchEdit: TEdit;
@@ -279,11 +278,10 @@ Procedure TMainSearchForm.acRunExecute(Sender: TObject);
 var
   lCommand: string;
 begin
-  //ShowMessage('run');
   lCommand := SQLQueryResult.FieldByName('command').AsString +  // TODO - const na sloupce v DB
     ' ' + '''' + SQLQueryResult.FieldByName('path').AsString + '''';  // TODO - const na sloupce v DB
-  runAsyncProcess.CommandLine := lCommand;
-  runAsyncProcess.Execute;
+  RunUtils.runAsyncProcess.CommandLine := lCommand;
+  RunUtils.runAsyncProcess.Execute;
   MainSearchForm.Close;
 end;
 
@@ -303,9 +301,9 @@ Begin
   Begin
     // TODO - konfigurace
     lCommand := 'gvim "' + lFile + '"';
-    runAsyncProcess.CommandLine := lCommand;
-    runAsyncProcess.CurrentDirectory := lDir;
-    runAsyncProcess.Execute;
+    RunUtils.runAsyncProcess.CommandLine := lCommand;
+    RunUtils.runAsyncProcess.CurrentDirectory := lDir;
+    RunUtils.runAsyncProcess.Execute;
   End;
 end;
 
@@ -360,16 +358,20 @@ end;
 
 Procedure TMainSearchForm.acOpenDirectoryExecute(Sender: TObject);
 var
-  lDir, lCommand : String;
+  lDir: String;
 Begin
   lDir := getDirectory(SQLQueryResult.FieldByName('path').AsString); // TODO - const na sloupce v DB
 
   if lDir <> '' then
   Begin
+    //lCommand := 'exo-open "' + lDir + '"';
     // TODO - zajistit náhradu v opencmd
-    lCommand := settingsForm.openCmd + ' "' + lDir + '"';
-    runAsyncProcess.CommandLine := lCommand;
-    runAsyncProcess.Execute;
+    //lCommand := settingsForm.openCmd + ' "' + lDir + '"';
+    //runAsyncProcess.CommandLine := lCommand;
+    //runAsyncProcess.Executable := ;
+    //runAsyncProcess.Parameters.AddText(lDir);
+    //runAsyncProcess.Execute;
+    RunUtils.RunAsync('exo-open', '%d', lDir, '', '');
   End;
 end;
 
@@ -405,8 +407,8 @@ Begin
   Begin
     // TODO - konfigurace
     lCommand := 'doublecmd -T "' + lDir + '"';
-    runAsyncProcess.CommandLine := lCommand;
-    runAsyncProcess.Execute;
+    RunUtils.runAsyncProcess.CommandLine := lCommand;
+    RunUtils.runAsyncProcess.Execute;
   End;
 end;
 
@@ -450,10 +452,10 @@ Begin
     //lCommand := 'xfce4-terminal --working-directory="' + lDir + '"';
     //runAsyncProcess.CommandLine := lCommand;
 
-    runAsyncProcess.Executable := 'xfce4-terminal';
-    runAsyncProcess.CurrentDirectory := lDir;
+    RunUtils.runAsyncProcess.Executable := 'xfce4-terminal';
+    RunUtils.runAsyncProcess.CurrentDirectory := lDir;
     //runAsyncProcess.Parameters.Add('--working-directory="' + lDir + '"');
-    runAsyncProcess.Execute;
+    RunUtils.runAsyncProcess.Execute;
   End;
 end;
 

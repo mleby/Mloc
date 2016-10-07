@@ -9,20 +9,29 @@ object settingsForm: TsettingsForm
   Position = poDefault
   LCLVersion = '1.6.0.4'
   object lblOpenCmd: TLabel
-    Left = 40
+    Left = 16
     Height = 15
     Top = 46
     Width = 109
     Caption = 'Open Command:'
     ParentColor = False
+    OnClick = lblOpenCmdClick
   end
-  object edOpenCmd: TEdit
-    Left = 152
+  object edFilemanagerParams: TEdit
+    Left = 344
     Height = 25
     Top = 40
-    Width = 472
+    Width = 312
     Anchors = [akTop, akLeft, akRight]
     TabOrder = 0
+  end
+  object edFilemanagerCmd: TEdit
+    Left = 136
+    Height = 25
+    Top = 40
+    Width = 208
+    TabOrder = 1
+    Text = 'edFilemanagerCmd'
   end
   object IniPropStorageCmd: TIniPropStorage
     StoredValues = <    
@@ -32,7 +41,7 @@ object settingsForm: TsettingsForm
       end>
     IniFileName = '~/.mloc.ini'
     IniSection = 'Command'
-    left = 592
-    top = 24
+    left = 568
+    top = 16
   end
 end

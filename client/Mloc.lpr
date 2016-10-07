@@ -7,7 +7,7 @@ Uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, MainForm, shortcutHelpForm, uSettingsForm;
+  Forms, MainForm, shortcutHelpForm, uSettingsForm, uRunUtils, ufileutils;
 
 {$R *.res}
 
@@ -34,6 +34,7 @@ Begin
     MainSearchForm.SearchEdit.Text := Application.GetOptionValue('s', 'search');
   End;
   Application.CreateForm(TsettingsForm, settingsForm);
+  Application.CreateForm(TRunUtils, RunUtils);
   Application.Run;
 End.
 

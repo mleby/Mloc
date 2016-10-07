@@ -449,23 +449,6 @@ object MainSearchForm: TMainSearchForm
       ShortCut = 16463
     end
   end
-  object runAsyncProcess: TAsyncProcess
-    Active = False
-    Options = []
-    Priority = ppNormal
-    StartupOptions = []
-    ShowWindow = swoNone
-    WindowColumns = 0
-    WindowHeight = 0
-    WindowLeft = 0
-    WindowRows = 0
-    WindowTop = 0
-    WindowWidth = 0
-    FillAttribute = 0
-    OnReadData = runAsyncProcessReadData
-    left = 664
-    top = 376
-  end
   object SQLQueryCount: TSQLQuery
     FieldDefs = <>
     Database = SQLite3Connection1

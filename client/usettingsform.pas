@@ -13,9 +13,11 @@ Type
   { TsettingsForm }
 
   TsettingsForm = Class(TForm)
-    edOpenCmd: TEdit;
+    edFilemanagerCmd: TEdit;
+    edFilemanagerParams: TEdit;
     IniPropStorageCmd: TIniPropStorage;
     lblOpenCmd: TLabel;
+    Procedure lblOpenCmdClick(Sender: TObject);
   Private
     Function getOpenCmd: String;
     { private declarations }
@@ -35,6 +37,11 @@ Implementation
 
 { TsettingsForm }
 
+Procedure TsettingsForm.lblOpenCmdClick(Sender: TObject);
+Begin
+
+end;
+
 Function TsettingsForm.getOpenCmd: String;
 Begin
   Result := IniPropStorageCmd.StoredValue['openCmd'];
@@ -49,7 +56,7 @@ Begin
   IniPropStorageCmd.StoredValues.SaveValues;
 
   // TODO - Load to fields
-  edOpenCmd.Text := openCmd;
+  edFilemanagerParams.Text := openCmd;
 End;
 
 Destructor TsettingsForm.Destroy;
