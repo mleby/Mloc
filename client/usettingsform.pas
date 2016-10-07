@@ -13,19 +13,47 @@ Type
   { TsettingsForm }
 
   TsettingsForm = Class(TForm)
+    Button1: TButton;
     edFilemanagerCmd: TEdit;
+    edCommanderCmd: TEdit;
+    edEditorCmd: TEdit;
+    edTerminalCmd: TEdit;
     edFilemanagerParams: TEdit;
+    edCommanderParams: TEdit;
+    edEditorParams: TEdit;
+    edTerminalParams: TEdit;
     IniPropStorageCmd: TIniPropStorage;
-    lblOpenCmd: TLabel;
-    Procedure lblOpenCmdClick(Sender: TObject);
+    lblFilemanager: TLabel;
+    lblCommander: TLabel;
+    lblEditor: TLabel;
+    lblTerminal: TLabel;
+    Procedure Button1Click(Sender: TObject);
   Private
-    Function getOpenCmd: String;
+    Function getFilemanagerParams: String;
+    Function getCommanderCmd: String;
+    Function getCommanderParams: String;
+    Function getEditorCmd: String;
+    Function getEditorParams: String;
+    Function getFilemanagerCmd: String;
+    Function getTerminalCmd: String;
+    Function getTerminalParams: String;
     { private declarations }
   Public
     Constructor Create(TheOwner: TComponent); override;
     Destructor Destroy; override;
-    // TODO - properties for config values
-    Property openCmd: String Read getOpenCmd;
+
+    // properties for config values
+    Property FilemanagerCmd: String Read getFilemanagerCmd;
+    Property FilemanagerParams: String Read getFilemanagerParams;
+
+    Property CommanderCmd: String Read getCommanderCmd;
+    Property CommanderParams: String Read getCommanderParams;
+
+    Property EditorCmd: String Read getEditorCmd;
+    Property EditorParams: String Read getEditorParams;
+
+    Property TerminalCmd: String Read getTerminalCmd;
+    Property TerminalParams: String Read getTerminalParams;
   End;
 
 Var
@@ -37,14 +65,50 @@ Implementation
 
 { TsettingsForm }
 
-Procedure TsettingsForm.lblOpenCmdClick(Sender: TObject);
+Function TsettingsForm.getFilemanagerCmd: String;
 Begin
-
+  Result := IniPropStorageCmd.StoredValue['FilemanagerCmd'];
 end;
 
-Function TsettingsForm.getOpenCmd: String;
+Procedure TsettingsForm.Button1Click(Sender: TObject);
 Begin
-  Result := IniPropStorageCmd.StoredValue['openCmd'];
+  IniPropStorageCmd.Save;
+  Close;
+end;
+
+Function TsettingsForm.getFilemanagerParams: String;
+Begin
+  Result := IniPropStorageCmd.StoredValue['FilemanagerParams'];
+End;
+
+Function TsettingsForm.getCommanderCmd: String;
+Begin
+  Result := IniPropStorageCmd.StoredValue['CommanderCmd'];
+end;
+
+Function TsettingsForm.getCommanderParams: String;
+Begin
+  Result := IniPropStorageCmd.StoredValue['CommanderParams'];
+end;
+
+Function TsettingsForm.getEditorCmd: String;
+Begin
+  Result := IniPropStorageCmd.StoredValue['EditorCmd'];
+end;
+
+Function TsettingsForm.getEditorParams: String;
+Begin
+  Result := IniPropStorageCmd.StoredValue['EditorParams'];
+end;
+
+Function TsettingsForm.getTerminalCmd: String;
+Begin
+  Result := IniPropStorageCmd.StoredValue['TerminalCmd'];
+end;
+
+Function TsettingsForm.getTerminalParams: String;
+Begin
+  Result := IniPropStorageCmd.StoredValue['TerminalParams'];
 end;
 
 Constructor TsettingsForm.Create(TheOwner: TComponent);
@@ -55,8 +119,19 @@ Begin
   IniPropStorageCmd.IniFileName := GetEnvironmentVariableUTF8('HOME')+'/.mloc.ini';
   IniPropStorageCmd.StoredValues.SaveValues;
 
-  // TODO - Load to fields
-  edFilemanagerParams.Text := openCmd;
+  // Load to fields
+  edFilemanagerCmd.Text := FilemanagerCmd;
+  edFilemanagerParams.Text := FilemanagerParams;
+
+  edCommanderCmd.Text := CommanderCmd;
+  edCommanderParams.Text := CommanderParams;
+
+  edEditorCmd.Text := EditorCmd;
+  edEditorParams.Text := EditorParams;
+
+  edTerminalCmd.Text := TerminalCmd;
+  edTerminalParams.Text := TerminalParams;
+
 End;
 
 Destructor TsettingsForm.Destroy;

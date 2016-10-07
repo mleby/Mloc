@@ -29,16 +29,40 @@ Implementation
 { TRunUtils }
 
 Procedure TRunUtils.RunAsync(Const aCmd, aParams, aDir, aPath, aName: String);
-
+var
+  sl :TStringList;
+  lParams: String;
 Begin
-  // TODO - replace macros
+  // replace macros
+  if aDir <> '' then
+     lParams := StringReplace(aParams, '%d', aDir, [rfReplaceAll]);
 
-  // TODO - aParams to TStrings
+  if aPath <> '' then
+     lParams := StringReplace(lParams, '%p', aPath, [rfReplaceAll]);
 
-  // execute process
-  runAsyncProcess.Executable := 'exo-open';
-  runAsyncProcess.Parameters.AddText(aDir);
-  runAsyncProcess.Execute;
+  if aName <> '' then
+     lParams := StringReplace(lParams, '%f', aName, [rfReplaceAll]);
+
+  sl := tstringlist.create;
+  try
+    // aParams to TStrings
+    //Strings.StrictDelimiter := true;
+    //sl.Delimiter := ' ';
+    //sl.DelimitedText := ' ' + lParams;
+
+    // execute process
+    if aDir <> '' then
+       runAsyncProcess.CurrentDirectory := aDir;
+
+    runAsyncProcess.Executable := aCmd;
+    runAsyncProcess.Parameters.Text := lParams;
+    //runAsyncProcess.Parameters.Clear;
+    //runAsyncProcess.Parameters.AddStrings(sl);
+    runAsyncProcess.Execute;
+
+  Finally
+    sl.Free;
+  End;
 End;
 
 End.
