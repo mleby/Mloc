@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, sqlite3conn, sqldb, DB, FileUtil, LConvEncoding, frmSelectProps, Forms, Controls,
   Graphics, Dialogs, StdCtrls, DBGrids, ActnList, AsyncProcess,
-  ComCtrls, ExtCtrls, Menus, Clipbrd, Buttons;
+  ComCtrls, ExtCtrls, Menus, Clipbrd, Buttons, LCLProc, uSettingsForm;
 
 type
 
@@ -18,13 +18,15 @@ type
     acDownToListing: TAction;
     acAppEnd: TAction;
     acOpenDirectory: TAction;
-    acDoubleCommander: TAction;
+    acCommander: TAction;
     acEdit: TAction;
     acTerminal: TAction;
     acCopyPath: TAction;
     acHelp: TAction;
     acShowAdvanced: TAction;
+    acSettings: TAction;
     Button1: TButton;
+    btSettings: TButton;
     Edit1: TEdit;
     HeaderPanel: TPanel;
     Label1: TLabel;
@@ -53,8 +55,8 @@ type
     procedure acAppEndExecute(Sender: TObject);
     Procedure acCopyPathExecute(Sender: TObject);
     Procedure acCopyPathUpdate(Sender: TObject);
-    Procedure acDoubleCommanderExecute(Sender: TObject);
-    Procedure acDoubleCommanderUpdate(Sender: TObject);
+    Procedure acCommanderExecute(Sender: TObject);
+    Procedure acCommanderUpdate(Sender: TObject);
     procedure acDownToListingUpdate(Sender: TObject);
     Procedure acEditExecute(Sender: TObject);
     Procedure acEditUpdate(Sender: TObject);
@@ -64,6 +66,7 @@ type
     procedure acRunExecute(Sender: TObject);
     procedure acSearchEditFocusExecute(Sender: TObject);
     procedure acDownToListingExecute(Sender: TObject);
+    Procedure acSettingsExecute(Sender: TObject);
     Procedure acShowAdvancedExecute(Sender: TObject);
     Procedure acTerminalExecute(Sender: TObject);
     Procedure acTerminalUpdate(Sender: TObject);
@@ -327,9 +330,10 @@ Begin
     begin
       lHint := (ActionList.Actions[i] as TAction).Hint;
       lName := (ActionList.Actions[i] as TAction).Name;
-      lShortCut := GetSpecialShortCutName((ActionList.Actions[i] as TAction).ShortCut);
+      lShortCut := ShortCutToText((ActionList.Actions[i] as TAction).ShortCut);
 
-      lShortcutHelpFrm.TextMemo.Lines.Append(lShortCut + ' : ' + lName + ' ' + lHint);
+      if lShortCut <> '' then
+         lShortcutHelpFrm.TextMemo.Lines.Append(lShortCut + ' : ' {+ lName + ' ' } + lHint);
     end;
 
     lShortcutHelpFrm.ShowModal;
@@ -338,6 +342,7 @@ Begin
   End;
 end;
 
+// TODO - smazat
 function TMainSearchForm.GetSpecialShortCutName(ShortCut: TShortCut): string;
 var
   Key: Byte;
@@ -361,8 +366,8 @@ Begin
 
   if lDir <> '' then
   Begin
-    // TODO - konfigurace
-    lCommand := 'exo-open "' + lDir + '"';
+    // TODO - zajistit náhradu v opencmd
+    lCommand := settingsForm.openCmd + ' "' + lDir + '"';
     runAsyncProcess.CommandLine := lCommand;
     runAsyncProcess.Execute;
   End;
@@ -390,7 +395,7 @@ Begin
         and (SQLQueryResult.FieldByName('path').AsString <> '');
 end;
 
-Procedure TMainSearchForm.acDoubleCommanderExecute(Sender: TObject);
+Procedure TMainSearchForm.acCommanderExecute(Sender: TObject);
 var
   lDir, lCommand: String;
 Begin
@@ -405,7 +410,7 @@ Begin
   End;
 end;
 
-Procedure TMainSearchForm.acDoubleCommanderUpdate(Sender: TObject);
+Procedure TMainSearchForm.acCommanderUpdate(Sender: TObject);
 Begin
   (Sender as TAction).Enabled := (SQLQueryResult.RecordCount > 0)
         and (SQLQueryResult.FieldByName('path').AsString <> '');
@@ -421,6 +426,11 @@ Procedure TMainSearchForm.acDownToListingExecute(Sender: TObject);
 begin
   ResultDBGrid.SetFocus;
   SQLQueryResult.First;
+end;
+
+Procedure TMainSearchForm.acSettingsExecute(Sender: TObject);
+Begin
+  settingsForm.ShowModal;
 end;
 
 Procedure TMainSearchForm.acShowAdvancedExecute(Sender: TObject);

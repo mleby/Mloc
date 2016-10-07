@@ -274,6 +274,14 @@ object MainSearchForm: TMainSearchForm
       Caption = 'Search'
       TabOrder = 1
     end
+    object btSettings: TButton
+      Left = 952
+      Height = 25
+      Top = 48
+      Width = 75
+      Action = acSettings
+      TabOrder = 2
+    end
   end
   object SQLite3Connection1: TSQLite3Connection
     Connected = True
@@ -363,64 +371,82 @@ object MainSearchForm: TMainSearchForm
     top = 376
     object acRun: TAction
       Caption = 'Execute'
+      Hint = 'Run open command'
       OnExecute = acRunExecute
       OnUpdate = acRunUpdate
       ShortCut = 113
     end
     object acSearchEditFocus: TAction
       Caption = 'Search Edit Focus'
+      Hint = 'Go to search edit'
       OnExecute = acSearchEditFocusExecute
       ShortCut = 16454
     end
     object acDownToListing: TAction
       Caption = 'acDownToListing'
+      Hint = 'Go to search result (from search edit)'
       OnExecute = acDownToListingExecute
       OnUpdate = acDownToListingUpdate
       ShortCut = 40
     end
     object acAppEnd: TAction
       Caption = 'acAppEnd'
+      Hint = 'Close application'
       OnExecute = acAppEndExecute
       ShortCut = 27
     end
     object acOpenDirectory: TAction
       Caption = 'Open directory'
+      Hint = 'Open directory in filemanager'
       OnExecute = acOpenDirectoryExecute
       OnUpdate = acOpenDirectoryUpdate
       ShortCut = 116
     end
-    object acDoubleCommander: TAction
+    object acCommander: TAction
       Caption = 'Commander'
-      OnExecute = acDoubleCommanderExecute
-      OnUpdate = acDoubleCommanderUpdate
+      Hint = 'Open directory in commander (secon filemanager)'
+      OnExecute = acCommanderExecute
+      OnUpdate = acCommanderUpdate
       ShortCut = 117
     end
     object acEdit: TAction
       Caption = 'Edit'
+      Hint = 'Open in editor'
       OnExecute = acEditExecute
       OnUpdate = acEditUpdate
       ShortCut = 115
     end
     object acTerminal: TAction
       Caption = 'Terminal'
+      Hint = 'Open terminal in file place'
       OnExecute = acTerminalExecute
       OnUpdate = acTerminalUpdate
       ShortCut = 120
     end
     object acCopyPath: TAction
       Caption = 'Copy path'
+      Hint = 'Copy path to clipboard'
       OnExecute = acCopyPathExecute
       OnUpdate = acCopyPathUpdate
       ShortCut = 16451
     end
     object acHelp: TAction
       Caption = 'acHelp'
+      Hint = 'Show this help'
       OnExecute = acHelpExecute
       ShortCut = 16456
     end
     object acShowAdvanced: TAction
       Caption = 'A'
+      Hint = 'Show advanced panel'
       OnExecute = acShowAdvancedExecute
+      ShortCut = 24646
+    end
+    object acSettings: TAction
+      Caption = 'Settings'
+      Hint = 'Show application setting'
+      OnExecute = acSettingsExecute
+      ShortCut = 16463
     end
   end
   object runAsyncProcess: TAsyncProcess
@@ -460,7 +486,7 @@ object MainSearchForm: TMainSearchForm
       Action = acOpenDirectory
     end
     object MenuItem3: TMenuItem
-      Action = acDoubleCommander
+      Action = acCommander
     end
     object MenuItem4: TMenuItem
       Action = acEdit

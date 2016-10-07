@@ -7,15 +7,13 @@ Uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, MainForm, shortcutHelpForm
-  { you can add units after this };
+  Forms, MainForm, shortcutHelpForm, uSettingsForm;
 
 {$R *.res}
 
 Begin
   if Application.HasOption('h', 'help') then begin
     // TODO - vypsání helpu
-     Application.;
     Halt;
   end;
 
@@ -35,6 +33,7 @@ Begin
   if Application.HasOption('s', 'search') then begin
     MainSearchForm.SearchEdit.Text := Application.GetOptionValue('s', 'search');
   End;
+  Application.CreateForm(TsettingsForm, settingsForm);
   Application.Run;
 End.
 

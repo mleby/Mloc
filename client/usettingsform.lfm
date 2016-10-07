@@ -1,0 +1,38 @@
+object settingsForm: TsettingsForm
+  Left = 742
+  Height = 442
+  Top = 129
+  Width = 673
+  Caption = 'settingsForm'
+  ClientHeight = 442
+  ClientWidth = 673
+  Position = poDefault
+  LCLVersion = '1.6.0.4'
+  object lblOpenCmd: TLabel
+    Left = 40
+    Height = 15
+    Top = 46
+    Width = 109
+    Caption = 'Open Command:'
+    ParentColor = False
+  end
+  object edOpenCmd: TEdit
+    Left = 152
+    Height = 25
+    Top = 40
+    Width = 472
+    Anchors = [akTop, akLeft, akRight]
+    TabOrder = 0
+  end
+  object IniPropStorageCmd: TIniPropStorage
+    StoredValues = <    
+      item
+        Name = 'openCmd'
+        Value = 'exo-open "%s"'
+      end>
+    IniFileName = '~/.mloc.ini'
+    IniSection = 'Command'
+    left = 592
+    top = 24
+  end
+end
