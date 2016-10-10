@@ -45,19 +45,17 @@ Begin
 
   sl := tstringlist.create;
   try
-    // aParams to TStrings
-    //Strings.StrictDelimiter := true;
-    //sl.Delimiter := ' ';
-    //sl.DelimitedText := ' ' + lParams;
+    //sl.StrictDelimiter := true;
+    sl.Delimiter := ' ';
+    sl.DelimitedText := lParams;
 
     // execute process
     if aDir <> '' then
        runAsyncProcess.CurrentDirectory := aDir;
 
     runAsyncProcess.Executable := aCmd;
-    runAsyncProcess.Parameters.Text := lParams;
-    //runAsyncProcess.Parameters.Clear;
-    //runAsyncProcess.Parameters.AddStrings(sl);
+    runAsyncProcess.Parameters.Clear;
+    runAsyncProcess.Parameters.AddStrings(sl);
     runAsyncProcess.Execute;
 
   Finally

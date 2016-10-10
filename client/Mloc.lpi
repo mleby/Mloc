@@ -45,7 +45,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="Mloc.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -78,13 +78,20 @@
         <Filename Value="urunutils.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="RunUtils"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="DataModule"/>
         <UnitName Value="uRunUtils"/>
       </Unit4>
       <Unit5>
         <Filename Value="ufileutils.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="uFileUtils"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="utools.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uTools"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -7,7 +7,7 @@ Uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, MainForm, shortcutHelpForm, uSettingsForm, uRunUtils, ufileutils;
+  Forms, MainForm, shortcutHelpForm, uSettingsForm, uRunUtils, uFileUtils, uTools;
 
 {$R *.res}
 

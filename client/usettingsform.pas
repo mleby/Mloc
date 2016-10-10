@@ -37,6 +37,8 @@ Type
     Function getFilemanagerCmd: String;
     Function getTerminalCmd: String;
     Function getTerminalParams: String;
+    Procedure LoadSettings;
+    Procedure SaveSettings;
     { private declarations }
   Public
     Constructor Create(TheOwner: TComponent); override;
@@ -72,7 +74,7 @@ end;
 
 Procedure TsettingsForm.Button1Click(Sender: TObject);
 Begin
-  IniPropStorageCmd.Save;
+  SaveSettings;
   Close;
 end;
 
@@ -111,15 +113,8 @@ Begin
   Result := IniPropStorageCmd.StoredValue['TerminalParams'];
 end;
 
-Constructor TsettingsForm.Create(TheOwner: TComponent);
+Procedure TsettingsForm.LoadSettings;
 Begin
-  Inherited Create(TheOwner);
-
-  // initialization for config
-  IniPropStorageCmd.IniFileName := GetEnvironmentVariableUTF8('HOME')+'/.mloc.ini';
-  IniPropStorageCmd.StoredValues.SaveValues;
-
-  // Load to fields
   edFilemanagerCmd.Text := FilemanagerCmd;
   edFilemanagerParams.Text := FilemanagerParams;
 
@@ -131,7 +126,30 @@ Begin
 
   edTerminalCmd.Text := TerminalCmd;
   edTerminalParams.Text := TerminalParams;
+End;
 
+Procedure TsettingsForm.SaveSettings;
+Begin
+  IniPropStorageCmd.StoredValue['FilemanagerCmd']    := edFilemanagerCmd.Text;
+  IniPropStorageCmd.StoredValue['FilemanagerParams'] := edFilemanagerParams.Text;
+
+  IniPropStorageCmd.StoredValue['CommanderCmd']      := edCommanderCmd.Text;
+  IniPropStorageCmd.StoredValue['CommanderParams']   := edCommanderParams.Text;
+
+  IniPropStorageCmd.StoredValue['EditorCmd']         := edEditorCmd.Text;
+  IniPropStorageCmd.StoredValue['EditorParams']      := edEditorParams.Text;
+
+  IniPropStorageCmd.StoredValue['TerminalCmd']       := edTerminalCmd.Text;
+  IniPropStorageCmd.StoredValue['TerminalParams']    := edTerminalParams.Text;
+
+  IniPropStorageCmd.Save;
+End;
+
+Constructor TsettingsForm.Create(TheOwner: TComponent);
+Begin
+  Inherited Create(TheOwner);
+  IniPropStorageCmd.IniFileName := GetEnvironmentVariableUTF8('HOME')+'/.mloc.ini';
+  LoadSettings;
 End;
 
 Destructor TsettingsForm.Destroy;

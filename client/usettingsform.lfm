@@ -149,7 +149,7 @@ object settingsForm: TsettingsForm
       end    
       item
         Name = 'TerminalParams'
-        Value = '-r 40 -c 120xterm'
+        Value = '-r 40 -c 120'
       end>
     IniFileName = '~/.mloc.ini'
     IniSection = 'Command'
