@@ -83,14 +83,17 @@
         <UnitName Value="uRunUtils"/>
       </Unit4>
       <Unit5>
-        <Filename Value="ufileutils.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="uFileUtils"/>
-      </Unit5>
-      <Unit6>
         <Filename Value="utools.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="uTools"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="umaindatamodule.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="DM"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+        <UnitName Value="uMainDataModule"/>
       </Unit6>
     </Units>
   </ProjectOptions>

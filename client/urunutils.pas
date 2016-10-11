@@ -11,12 +11,12 @@ Type
 
   { TRunUtils }
 
-  TRunUtils = Class(TDataModule)
-    runAsyncProcess: TAsyncProcess;
+  TRunUtils = Class(TDataModule) // TODO - odstranit třídu
+    runAsyncProcess: TAsyncProcess; // TODO - na lokální proměnnou
   Private
     { private declarations }
   Public
-    procedure RunAsync(const aCmd, aParams, aDir, aPath, aName: String);
+    procedure RunAsync(const aCmd, aParams, aDir, aPath, aName: String); // TODO - na běžnou proceduru
   End;
 
 Var

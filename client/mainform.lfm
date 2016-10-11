@@ -146,38 +146,6 @@ object MainSearchForm: TMainSearchForm
   }
   Position = poScreenCenter
   LCLVersion = '1.6.0.4'
-  object ResultDBGrid: TDBGrid
-    Left = 0
-    Height = 392
-    Top = 152
-    Width = 1041
-    Align = alClient
-    AutoEdit = False
-    Color = clWindow
-    Columns = <    
-      item
-        Title.Caption = 'tag'
-        Width = 100
-        FieldName = 'tag'
-      end    
-      item
-        Title.Caption = 'name'
-        Width = 400
-        FieldName = 'name'
-      end    
-      item
-        Title.Caption = 'path'
-        Width = 512
-        FieldName = 'path'
-      end>
-    DataSource = DataSource1
-    Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
-    PopupMenu = ResultPopUpMenu
-    ReadOnly = True
-    TabOrder = 0
-    OnDblClick = ResultDBGridDblClick
-    OnKeyDown = ResultDBGridKeyDown
-  end
   object StatusBar: TStatusBar
     Left = 0
     Height = 19
@@ -207,7 +175,7 @@ object MainSearchForm: TMainSearchForm
     BevelOuter = bvNone
     ClientHeight = 40
     ClientWidth = 1041
-    TabOrder = 2
+    TabOrder = 1
     object NormalizeChb: TCheckBox
       Left = 912
       Height = 21
@@ -220,7 +188,7 @@ object MainSearchForm: TMainSearchForm
       TabOrder = 0
     end
     object SearchEdit: TEdit
-      Left = 7
+      Left = 8
       Height = 25
       Top = 6
       Width = 897
@@ -247,7 +215,7 @@ object MainSearchForm: TMainSearchForm
     BevelOuter = bvNone
     ClientHeight = 112
     ClientWidth = 1041
-    TabOrder = 3
+    TabOrder = 2
     Visible = False
     object Edit1: TEdit
       Left = 128
@@ -283,88 +251,37 @@ object MainSearchForm: TMainSearchForm
       TabOrder = 2
     end
   end
-  object SQLite3Connection1: TSQLite3Connection
-    Connected = True
-    LoginPrompt = False
-    DatabaseName = '/home/martin/.mlocate.db'
-    KeepConnection = False
-    Transaction = SQLTransaction1
-    Options = []
-    left = 666
-    top = 78
-  end
-  object SQLQueryResult: TSQLQuery
-    FieldDefs = <    
+  object ResultDBGrid: TDBGrid
+    Left = 0
+    Height = 392
+    Top = 152
+    Width = 1041
+    Align = alClient
+    AutoEdit = False
+    Color = clWindow
+    Columns = <    
       item
-        Name = 'id'
-        DataType = ftString
-        Precision = -1
-        Size = 255
+        Title.Caption = 'tag'
+        Width = 100
+        FieldName = 'tag'
       end    
       item
-        Name = 'path'
-        DataType = ftString
-        Precision = -1
-        Size = 255
+        Title.Caption = 'name'
+        Width = 400
+        FieldName = 'name'
       end    
       item
-        Name = 'name'
-        DataType = ftString
-        Precision = -1
-        Size = 255
-      end    
-      item
-        Name = 'search'
-        DataType = ftString
-        Precision = -1
-        Size = 255
-      end    
-      item
-        Name = 'command'
-        DataType = ftString
-        Precision = -1
-        Size = 255
-      end    
-      item
-        Name = 'updated'
-        DataType = ftString
-        Precision = -1
-        Size = 255
-      end    
-      item
-        Name = 'tag'
-        DataType = ftString
-        Precision = -1
-        Size = 255
-      end    
-      item
-        Name = 'priority'
-        DataType = ftString
-        Precision = -1
-        Size = 255
+        Title.Caption = 'path'
+        Width = 512
+        FieldName = 'path'
       end>
-    Database = SQLite3Connection1
-    Transaction = SQLTransaction1
+    DataSource = DM.DataSource1
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
+    PopupMenu = ResultPopUpMenu
     ReadOnly = True
-    SQL.Strings = (
-      'select * from sources where id in (select id from sourcesSearch where search MATCH ''zim* deb'')'
-    )
-    Options = []
-    Params = <>
-    left = 664
-    top = 136
-  end
-  object DataSource1: TDataSource
-    DataSet = SQLQueryResult
-    left = 666
-    top = 192
-  end
-  object SQLTransaction1: TSQLTransaction
-    Active = True
-    Database = SQLite3Connection1
-    Options = []
-    left = 664
-    top = 248
+    TabOrder = 3
+    OnDblClick = ResultDBGridDblClick
+    OnKeyDown = ResultDBGridKeyDown
   end
   object ActionList: TActionList
     left = 576
@@ -448,16 +365,6 @@ object MainSearchForm: TMainSearchForm
       OnExecute = acSettingsExecute
       ShortCut = 16463
     end
-  end
-  object SQLQueryCount: TSQLQuery
-    FieldDefs = <>
-    Database = SQLite3Connection1
-    Transaction = SQLTransaction1
-    ReadOnly = True
-    Options = []
-    Params = <>
-    left = 560
-    top = 136
   end
   object ResultPopUpMenu: TPopupMenu
     left = 576

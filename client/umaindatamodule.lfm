@@ -1,0 +1,100 @@
+object DM: TDM
+  OldCreateOrder = False
+  Height = 344
+  HorizontalOffset = 1007
+  VerticalOffset = 166
+  Width = 431
+  object SQLite3Connection1: TSQLite3Connection
+    Connected = True
+    LoginPrompt = False
+    DatabaseName = '/home/martin/.mlocate.db'
+    KeepConnection = False
+    Transaction = SQLTransaction1
+    Options = []
+    left = 264
+    top = 32
+  end
+  object SQLQueryCount: TSQLQuery
+    FieldDefs = <>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction1
+    ReadOnly = True
+    Options = []
+    Params = <>
+    left = 136
+    top = 104
+  end
+  object SQLTransaction1: TSQLTransaction
+    Active = False
+    Database = SQLite3Connection1
+    Options = []
+    left = 136
+    top = 184
+  end
+  object DataSource1: TDataSource
+    DataSet = SQLQueryResult
+    left = 264
+    top = 192
+  end
+  object SQLQueryResult: TSQLQuery
+    FieldDefs = <    
+      item
+        Name = 'id'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end    
+      item
+        Name = 'path'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end    
+      item
+        Name = 'name'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end    
+      item
+        Name = 'search'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end    
+      item
+        Name = 'command'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end    
+      item
+        Name = 'updated'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end    
+      item
+        Name = 'tag'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end    
+      item
+        Name = 'priority'
+        DataType = ftString
+        Precision = -1
+        Size = 255
+      end>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction1
+    ReadOnly = True
+    SQL.Strings = (
+      'select * from sources where id in (select id from sourcesSearch where search MATCH ''zim* deb'')'
+    )
+    Options = []
+    Params = <>
+    left = 264
+    top = 104
+  end
+end

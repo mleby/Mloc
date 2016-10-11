@@ -1,8 +1,8 @@
 object RunUtils: TRunUtils
   OldCreateOrder = False
   Height = 150
-  HorizontalOffset = 1059
-  VerticalOffset = 72
+  HorizontalOffset = 745
+  VerticalOffset = 202
   Width = 150
   object runAsyncProcess: TAsyncProcess
     Active = False

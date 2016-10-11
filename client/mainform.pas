@@ -39,16 +39,11 @@ type
     NormalizeChb: TCheckBox;
     acRun: TAction;
     ActionList: TActionList;
+    ResultDBGrid: TDBGrid;
     SpeedButton1: TSpeedButton;
     AdvancedPanel: TPanel;
     ResultPopUpMenu: TPopupMenu;
-    DataSource1: TDataSource;
-    ResultDBGrid: TDBGrid;
     SearchEdit: TEdit;
-    SQLite3Connection1: TSQLite3Connection;
-    SQLQueryCount: TSQLQuery;
-    SQLQueryResult: TSQLQuery;
-    SQLTransaction1: TSQLTransaction;
     StatusBar: TStatusBar;
     Timer1: TTimer;
     procedure acAppEndExecute(Sender: TObject);
@@ -75,16 +70,15 @@ type
     procedure ResultDBGridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     Procedure runAsyncProcessReadData(Sender: TObject);
     procedure SearchEditChange(Sender: TObject);
+
   private
     FPath: string;
     FTag: string;
-    Function getDirectory(aPath: String): String;
     procedure SetPath(aPath: string);
     procedure SetTag(aTag: string);
     procedure Search;
-    { private declarations }
+
   public
-    { public declarations }
     property Path: string read FPath write SetPath;
     property Tag: string read FTag write SetTag;
   end;
@@ -94,7 +88,7 @@ var
 
 implementation
 
-uses shortcutHelpForm, uTools;
+uses shortcutHelpForm, uTools, uMainDataModule;
 
 {$R *.lfm}
 
@@ -112,24 +106,6 @@ begin
   StatusBar.Panels[2].Text := FPath;
 end;
 
-Function TMainSearchForm.getDirectory(aPath: String): String;
-var
-  isDir: Boolean;
-Begin
-  Result  := aPath;
-  isDir := DirectoryExists(Result);
-
-  If Not isDir Then
-  Begin
-    Result  := ExtractFilePath(Result);
-    isDir := DirectoryExists(Result);
-  End;
-
-  If Not isDir Then
-     Result := '';
-End;
-
-
 Procedure TMainSearchForm.SetTag(aTag: string);
 Begin
   FTag := aTag;
@@ -138,7 +114,7 @@ End;
 
 Procedure TMainSearchForm.Search;
 var
-  lSearchTerm, lWhere, lSelect: string;
+  lSearchTerm: string;
 Begin
   StatusBar.Panels[0].Text := '';
     StatusBar.Panels[1].Text := '';
@@ -150,47 +126,28 @@ Begin
         lSearchTerm := SearchEdit.Text;
         if NormalizeChb.Checked then
         begin
-          // TODO - odstranit accenty
           lSearchTerm := NormalizeTerm(lSearchTerm);
           lSearchTerm := StringReplace(lSearchTerm, ' ', '* *', [rfReplaceAll, rfIgnoreCase]);
           lSearchTerm := '*' + lSearchTerm + '*';
         end;
       End;
 
-      lWhere := ' 1 = 1 ';
-      if lSearchTerm <> '' then
-      begin
-          lWhere := lWhere + ' and id in (select id from sourcesSearch where search MATCH ''' +
-            lSearchTerm + ''') ';
-      End;
-      if FPath <> '' then
-      begin
-        lWhere := lWhere + ' and path like ''' + FPath + '%'' ';
+      If FPath <> '' Then
         StatusBar.Panels[2].Text := FPath;
-      end;
-      if FTag <> '' then
-      begin
-        lWhere := lWhere + ' and tag = ''' + FTag + ''' ';
+
+      If FTag <> '' Then
         StatusBar.Panels[3].Text := FTag;
-      End;
-      lWhere := lWhere + ' order by priority, name, path';
 
-      lSelect := 'select * from sources where ' + lWhere;
-
-      SQLQueryResult.Close;
-      SQLQueryResult.SQL.Text := lSelect;
-      SQLQueryResult.Open;
-
-      SQLQueryCount.Close;
-      SQLQueryCount.SQL.Text := 'select count(*) as cnt from sources where ' + lWhere;
-      SQLQueryCount.Open;
+      DM.DBSearch(lSearchTerm, FPath, FTag);
 
       StatusBar.Panels[0].Text := lSearchTerm;
-      StatusBar.Panels[1].Text := 'Found: ' + SQLQueryCount.FieldByName('cnt').AsString;
+      StatusBar.Panels[1].Text := 'Found: ' + DM.SQLQueryCount.FieldByName('cnt').AsString;
     end
     else
-      SQLQueryResult.Close;
+      DM.SQLQueryResult.Close;
 End;
+
+
 
 Procedure TMainSearchForm.ResultDBGridDblClick(Sender: TObject);
 begin
@@ -199,8 +156,7 @@ end;
 
 Procedure TMainSearchForm.acRunUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := (SQLQueryResult.RecordCount > 0);
-  // and (ResultDBGrid.SelectedIndex > 0);
+  (Sender as TAction).Enabled := (DM.SQLQueryResult.RecordCount > 0);
 end;
 
 Procedure TMainSearchForm.ResultDBGridKeyDown(Sender: TObject; Var Key: word; Shift: TShiftState);
@@ -215,39 +171,28 @@ Begin
 end;
 
 Procedure TMainSearchForm.acRunExecute(Sender: TObject);
-var
-  lCommand: string;
 begin
-  lCommand := SQLQueryResult.FieldByName('command').AsString +  // TODO - const na sloupce v DB
-    ' ' + '''' + SQLQueryResult.FieldByName('path').AsString + '''';  // TODO - const na sloupce v DB
-  RunUtils.runAsyncProcess.CommandLine := lCommand;
-  RunUtils.runAsyncProcess.Execute;
+  RunUtils.RunAsync(DM.getCommand, '%p', DM.getDir, DM.getPath, '');
   MainSearchForm.Close;
 end;
 
 Procedure TMainSearchForm.acDownToListingUpdate(Sender: TObject);
 begin
-  (Sender as TAction).Enabled := SearchEdit.Focused and (SQLQueryResult.RecordCount > 0);
+  (Sender as TAction).Enabled := SearchEdit.Focused and (DM.SQLQueryResult.RecordCount > 0);
 end;
 
 Procedure TMainSearchForm.acEditExecute(Sender: TObject);
-var
-  lFile, lCommand, lDir: String;
 Begin
-  lFile := SQLQueryResult.FieldByName('path').AsString; // TODO - const na sloupce v DB
-  lDir := getDirectory(SQLQueryResult.FieldByName('path').AsString); // TODO - const na sloupce v DB
-
-  if lFile <> '' then
+  if DM.getPath <> '' then
   Begin
-    RunUtils.RunAsync(settingsForm.EditorCmd, settingsForm.EditorParams, lDir, lFile, '');
+    RunUtils.RunAsync(settingsForm.EditorCmd, settingsForm.EditorParams, DM.getDir, DM.getPath, '');
   End;
 end;
 
 Procedure TMainSearchForm.acEditUpdate(Sender: TObject);
 Begin
-  (Sender as TAction).Enabled := (SQLQueryResult.RecordCount > 0)
-        and (SQLQueryResult.FieldByName('path').AsString <> '');
-  // TODO - kontrolovat nastavení ext. příkazu
+  (Sender as TAction).Enabled := (DM.SQLQueryResult.RecordCount > 0)
+        and (DM.getPath <> '') and (settingsForm.EditorCmd <> '');
 end;
 
 Procedure TMainSearchForm.acHelpExecute(Sender: TObject);
@@ -277,21 +222,17 @@ Begin
 end;
 
 Procedure TMainSearchForm.acOpenDirectoryExecute(Sender: TObject);
-var
-  lDir: String;
 Begin
-  lDir := getDirectory(SQLQueryResult.FieldByName('path').AsString); // TODO - const na sloupce v DB
-
-  if lDir <> '' then
+  if DM.getDir <> '' then
   Begin
-    RunUtils.RunAsync(settingsForm.FilemanagerCmd, settingsForm.FilemanagerParams, lDir, '', '');
+    RunUtils.RunAsync(settingsForm.FilemanagerCmd, settingsForm.FilemanagerParams, DM.getDir, '', '');
   End;
 end;
 
 Procedure TMainSearchForm.acOpenDirectoryUpdate(Sender: TObject);
 Begin
-  (Sender as TAction).Enabled := (SQLQueryResult.RecordCount > 0)
-        and (SQLQueryResult.FieldByName('path').AsString <> '');
+  (Sender as TAction).Enabled := (DM.SQLQueryResult.RecordCount > 0)
+        and (DM.getPath <> '') and (settingsForm.FilemanagerCmd <> '');
 end;
 
 Procedure TMainSearchForm.acAppEndExecute(Sender: TObject);
@@ -301,33 +242,27 @@ end;
 
 Procedure TMainSearchForm.acCopyPathExecute(Sender: TObject);
 Begin
-  Clipboard.AsText := SQLQueryResult.FieldByName('path').AsString;
+  Clipboard.AsText := DM.getPath;
 end;
 
 Procedure TMainSearchForm.acCopyPathUpdate(Sender: TObject);
 Begin
-  (Sender as TAction).Enabled := (SQLQueryResult.RecordCount > 0)
-        and (SQLQueryResult.FieldByName('path').AsString <> '');
+  (Sender as TAction).Enabled := (DM.SQLQueryResult.RecordCount > 0)
+        and (DM.getPath <> '');
 end;
 
 Procedure TMainSearchForm.acCommanderExecute(Sender: TObject);
-var
-  lDir, lCommand, lFile: String;
 Begin
-  lFile := SQLQueryResult.FieldByName('path').AsString; // TODO - const na sloupce v DB
-  lDir := getDirectory(SQLQueryResult.FieldByName('path').AsString); // TODO - const na sloupce v DB
-
-  if lDir <> '' then
+  if DM.getDir <> '' then
   Begin
-    RunUtils.RunAsync(settingsForm.CommanderCmd, settingsForm.CommanderParams, lDir, lFile, '');
+    RunUtils.RunAsync(settingsForm.CommanderCmd, settingsForm.CommanderParams, DM.getDir, DM.getPath, '');
   End;
 end;
 
 Procedure TMainSearchForm.acCommanderUpdate(Sender: TObject);
 Begin
-  (Sender as TAction).Enabled := (SQLQueryResult.RecordCount > 0)
-        and (SQLQueryResult.FieldByName('path').AsString <> '');
-  // TODO - kontrolovat nastavení ext. příkazu
+  (Sender as TAction).Enabled := (DM.SQLQueryResult.RecordCount > 0)
+        and (DM.getPath <> '') and (settingsForm.CommanderCmd <> '');
 end;
 
 Procedure TMainSearchForm.acSearchEditFocusExecute(Sender: TObject);
@@ -338,7 +273,7 @@ end;
 Procedure TMainSearchForm.acDownToListingExecute(Sender: TObject);
 begin
   ResultDBGrid.SetFocus;
-  SQLQueryResult.First;
+  DM.SQLQueryResult.First;
 end;
 
 Procedure TMainSearchForm.acSettingsExecute(Sender: TObject);
@@ -352,22 +287,17 @@ Begin
 end;
 
 Procedure TMainSearchForm.acTerminalExecute(Sender: TObject);
-var
-  lDir, lCommand: String;
 Begin
-  lDir := getDirectory(SQLQueryResult.FieldByName('path').AsString); // TODO - const na sloupce v DB
-
-  if lDir <> '' then
+  if DM.getDir <> '' then
   Begin
-    RunUtils.RunAsync(settingsForm.TerminalCmd, settingsForm.TerminalParams, lDir, '', '');
+    RunUtils.RunAsync(settingsForm.TerminalCmd, settingsForm.TerminalParams, DM.getDir, '', '');
   End;
 end;
 
 Procedure TMainSearchForm.acTerminalUpdate(Sender: TObject);
 Begin
-  (Sender as TAction).Enabled := (SQLQueryResult.RecordCount > 0)
-        and (SQLQueryResult.FieldByName('path').AsString <> '');
-  // TODO - kontrolovat nastavení ext. příkazu
+  (Sender as TAction).Enabled := (DM.SQLQueryResult.RecordCount > 0)
+        and (DM.getPath <> '') and (settingsForm.TerminalCmd <> '');
 end;
 
 Procedure TMainSearchForm.IdleTimer1Timer(Sender: TObject);
