@@ -28,7 +28,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-t program"/>
+        <CommandLineParams Value="-t program -a 2 -d 200"/>
       </local>
     </RunParams>
     <RequiredPackages Count="4">

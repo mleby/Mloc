@@ -78,10 +78,12 @@ type
 
   private
     FAutoQuery: Integer;
+    FDelay: Integer;
     FPath: String;
     FTag: String;
     FWhere : String;
     Procedure SetAutoQuery(AValue: Integer);
+    Procedure SetDelay(AValue: Integer);
     procedure SetPath(aPath: string);
     procedure SetTag(aTag: string);
     Procedure SetWhere(AValue: string);
@@ -93,6 +95,7 @@ type
     property Tag: string read FTag write SetTag;
     property Where: string read FWhere write SetWhere;
     Property AutoQuery: Integer Read FAutoQuery Write SetAutoQuery;
+    Property Delay: Integer Read FDelay Write SetDelay;
   end;
 
 var
@@ -123,6 +126,13 @@ Procedure TMainSearchForm.SetAutoQuery(AValue: Integer);
 Begin
   If FAutoQuery = AValue Then Exit;
   FAutoQuery := AValue;
+End;
+
+Procedure TMainSearchForm.SetDelay(AValue: Integer);
+Begin
+  If FDelay = AValue Then Exit;
+  FDelay := AValue;
+  Timer1.Interval := AValue;
 End;
 
 Procedure TMainSearchForm.SetTag(aTag: string);

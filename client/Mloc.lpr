@@ -21,6 +21,11 @@ Begin
   Application.Initialize;
   Application.CreateForm(TMainSearchForm, MainSearchForm);
 
+  if Application.HasOption('d', 'delay') then
+    MainSearchForm.Delay := StrToInt(Application.GetOptionValue('d', 'delay'))
+  else
+    MainSearchForm.Delay := 750;
+
   if Application.HasOption('a', 'auto') then
     MainSearchForm.AutoQuery := StrToInt(Application.GetOptionValue('a', 'auto'))
   else
