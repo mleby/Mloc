@@ -7,7 +7,7 @@ Uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, MainForm, shortcutHelpForm, uSettingsForm, uRunUtils, uTools, uMainDataModule;
+  Forms, MainForm, shortcutHelpForm, uSettingsForm, uRunUtils, uTools, uMainDataModule, sysutils;
 
 {$R *.res}
 
@@ -21,18 +21,25 @@ Begin
   Application.Initialize;
   Application.CreateForm(TMainSearchForm, MainSearchForm);
 
-  if Application.HasOption('p', 'path') then begin
+  if Application.HasOption('a', 'auto') then
+    MainSearchForm.AutoQuery := StrToInt(Application.GetOptionValue('a', 'auto'))
+  else
+    MainSearchForm.AutoQuery := 3;
+
+  if Application.HasOption('p', 'path') then
     MainSearchForm.Path := Application.GetOptionValue('p', 'path');
-  End;
 
-  if Application.HasOption('t', 'tag') then begin
+  if Application.HasOption('t', 'tag') then
     MainSearchForm.Tag := Application.GetOptionValue('t', 'tag');
-    MainSearchForm.SearchEditChange(MainSearchForm.SearchEdit);
-  End;
 
-  if Application.HasOption('s', 'search') then begin
+  if Application.HasOption('w', 'where') then
+    MainSearchForm.Where := Application.GetOptionValue('w', 'where');
+
+  if Application.HasOption('s', 'search') then
     MainSearchForm.SearchEdit.Text := Application.GetOptionValue('s', 'search');
-  End;
+
+  if Application.HasOption('q', 'query') then // q query
+     MainSearchForm.Search(true);
 
   Application.CreateForm(TsettingsForm, settingsForm);
   Application.CreateForm(TRunUtils, RunUtils);

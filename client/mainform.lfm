@@ -162,7 +162,10 @@ object MainSearchForm: TMainSearchForm
         Width = 250
       end    
       item
-        Width = 50
+        Width = 100
+      end    
+      item
+        Width = 500
       end>
     SimplePanel = False
   end
@@ -208,16 +211,16 @@ object MainSearchForm: TMainSearchForm
   end
   object AdvancedPanel: TPanel
     Left = 0
-    Height = 112
+    Height = 96
     Top = 40
     Width = 1041
     Align = alTop
     BevelOuter = bvNone
-    ClientHeight = 112
+    ClientHeight = 96
     ClientWidth = 1041
     TabOrder = 2
     Visible = False
-    object Edit1: TEdit
+    object edWhere: TEdit
       Left = 128
       Height = 25
       Top = 0
@@ -225,7 +228,7 @@ object MainSearchForm: TMainSearchForm
       Anchors = [akTop, akLeft, akRight]
       TabOrder = 0
     end
-    object Label1: TLabel
+    object lblWhere: TLabel
       Left = 8
       Height = 15
       Top = 5
@@ -233,28 +236,61 @@ object MainSearchForm: TMainSearchForm
       Caption = 'Appended where:'
       ParentColor = False
     end
-    object Button1: TButton
+    object btnSearch: TButton
       Left = 952
       Height = 25
-      Top = 80
+      Top = 36
       Width = 75
       Anchors = [akTop, akRight]
       Caption = 'Search'
+      OnClick = btnSearchClick
       TabOrder = 1
     end
     object btSettings: TButton
       Left = 952
       Height = 25
-      Top = 48
+      Top = 64
       Width = 75
       Action = acSettings
       TabOrder = 2
     end
+    object edTag: TEdit
+      Left = 128
+      Height = 25
+      Top = 32
+      Width = 252
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 3
+    end
+    object lblTag: TLabel
+      Left = 95
+      Height = 15
+      Top = 36
+      Width = 26
+      Caption = 'Tag:'
+      ParentColor = False
+    end
+    object lblPath: TLabel
+      Left = 88
+      Height = 15
+      Top = 68
+      Width = 32
+      Caption = 'Path:'
+      ParentColor = False
+    end
+    object edPath: TEdit
+      Left = 128
+      Height = 25
+      Top = 64
+      Width = 811
+      Anchors = [akTop, akLeft, akRight]
+      TabOrder = 4
+    end
   end
   object ResultDBGrid: TDBGrid
     Left = 0
-    Height = 392
-    Top = 152
+    Height = 408
+    Top = 136
     Width = 1041
     Align = alClient
     AutoEdit = False

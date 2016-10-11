@@ -25,11 +25,16 @@ type
     acHelp: TAction;
     acShowAdvanced: TAction;
     acSettings: TAction;
+    btnSearch: TButton;
     Button1: TButton;
     btSettings: TButton;
-    Edit1: TEdit;
+    edPath: TEdit;
+    edWhere: TEdit;
+    edTag: TEdit;
     HeaderPanel: TPanel;
-    Label1: TLabel;
+    lblPath: TLabel;
+    lblWhere: TLabel;
+    lblTag: TLabel;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
@@ -64,23 +69,30 @@ type
     Procedure acShowAdvancedExecute(Sender: TObject);
     Procedure acTerminalExecute(Sender: TObject);
     Procedure acTerminalUpdate(Sender: TObject);
+    Procedure btnSearchClick(Sender: TObject);
     Procedure IdleTimer1Timer(Sender: TObject);
     procedure ResultDBGridDblClick(Sender: TObject);
     procedure acRunUpdate(Sender: TObject);
     procedure ResultDBGridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
-    Procedure runAsyncProcessReadData(Sender: TObject);
     procedure SearchEditChange(Sender: TObject);
 
   private
-    FPath: string;
-    FTag: string;
+    FAutoQuery: Integer;
+    FPath: String;
+    FTag: String;
+    FWhere : String;
+    Procedure SetAutoQuery(AValue: Integer);
     procedure SetPath(aPath: string);
     procedure SetTag(aTag: string);
-    procedure Search;
+    Procedure SetWhere(AValue: string);
 
   public
+    procedure Search(const force: Boolean);
+
     property Path: string read FPath write SetPath;
     property Tag: string read FTag write SetTag;
+    property Where: string read FWhere write SetWhere;
+    Property AutoQuery: Integer Read FAutoQuery Write SetAutoQuery;
   end;
 
 var
@@ -103,23 +115,40 @@ end;
 Procedure TMainSearchForm.SetPath(aPath: string);
 begin
   FPath := aPath;
+  edPath.Text := aPath;
   StatusBar.Panels[2].Text := FPath;
 end;
+
+Procedure TMainSearchForm.SetAutoQuery(AValue: Integer);
+Begin
+  If FAutoQuery = AValue Then Exit;
+  FAutoQuery := AValue;
+End;
 
 Procedure TMainSearchForm.SetTag(aTag: string);
 Begin
   FTag := aTag;
+  edTag.Text := aTag;
   StatusBar.Panels[3].Text := 'tag: ' + FTag;
 End;
 
-Procedure TMainSearchForm.Search;
+Procedure TMainSearchForm.Search(Const force: Boolean);
 var
   lSearchTerm: string;
 Begin
-  StatusBar.Panels[0].Text := '';
-    StatusBar.Panels[1].Text := '';
+  if FPath <> edPath.Text then
+     Path := edPath.Text;
 
-    if (Length(SearchEdit.Text) > 2) or (FTag <> '') then
+  if FTag <> edTag.Text then
+     Tag := edTag.Text;
+
+  if FWhere <> edWhere.Text then
+     Where := edWhere.Text;
+
+  StatusBar.Panels[0].Text := '';
+  StatusBar.Panels[1].Text := '';
+
+    if (Length(SearchEdit.Text) >= AutoQuery) or force then
     begin
       if SearchEdit.Text <> '' then
       begin
@@ -132,11 +161,11 @@ Begin
         end;
       End;
 
-      If FPath <> '' Then
-        StatusBar.Panels[2].Text := FPath;
-
-      If FTag <> '' Then
-        StatusBar.Panels[3].Text := FTag;
+      //If FPath <> '' Then
+      //  StatusBar.Panels[2].Text := FPath;
+      //
+      //If FTag <> '' Then
+      //  StatusBar.Panels[3].Text := FTag;
 
       DM.DBSearch(lSearchTerm, FPath, FTag);
 
@@ -144,7 +173,18 @@ Begin
       StatusBar.Panels[1].Text := 'Found: ' + DM.SQLQueryCount.FieldByName('cnt').AsString;
     end
     else
+    begin
       DM.SQLQueryResult.Close;
+      StatusBar.Panels[0].Text := 'min chars of query: ' + IntToStr(AutoQuery);
+    End;
+End;
+
+Procedure TMainSearchForm.SetWhere(AValue: string);
+Begin
+  If FWhere = AValue Then Exit;
+  FWhere := AValue;
+  edTag.Text := AValue;
+  StatusBar.Panels[4].Text := 'Where: ' + AValue;
 End;
 
 
@@ -163,11 +203,6 @@ Procedure TMainSearchForm.ResultDBGridKeyDown(Sender: TObject; Var Key: word; Sh
 begin
   if Key = 13 then
     acRun.Execute;
-end;
-
-Procedure TMainSearchForm.runAsyncProcessReadData(Sender: TObject);
-Begin
-
 end;
 
 Procedure TMainSearchForm.acRunExecute(Sender: TObject);
@@ -300,10 +335,15 @@ Begin
         and (DM.getPath <> '') and (settingsForm.TerminalCmd <> '');
 end;
 
+Procedure TMainSearchForm.btnSearchClick(Sender: TObject);
+Begin
+  Search(true);
+end;
+
 Procedure TMainSearchForm.IdleTimer1Timer(Sender: TObject);
 Begin
   Timer1.Enabled := false;
-  Search;
+  Search(false);
 end;
 
 end.
