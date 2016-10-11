@@ -75,6 +75,7 @@ type
     procedure acRunUpdate(Sender: TObject);
     procedure ResultDBGridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure SearchEditChange(Sender: TObject);
+    Procedure SearchEditKeyPress(Sender: TObject; Var Key: char);
 
   private
     FAutoQuery: Integer;
@@ -103,7 +104,7 @@ var
 
 implementation
 
-uses shortcutHelpForm, uTools, uMainDataModule;
+uses shortcutHelpForm, uTools, uMainDataModule, LCLType;
 
 {$R *.lfm}
 
@@ -113,6 +114,16 @@ Procedure TMainSearchForm.SearchEditChange(Sender: TObject);
 begin
   Timer1.Enabled := false;
   Timer1.Enabled := true;
+end;
+
+Procedure TMainSearchForm.SearchEditKeyPress(Sender: TObject; Var Key: char);
+Begin
+  if key = char(VK_RETURN) then
+  begin
+    Search(true);
+    if DM.SQLQueryResult.RecordCount > 0 then
+       ResultDBGrid.SetFocus;
+  End;
 end;
 
 Procedure TMainSearchForm.SetPath(aPath: string);

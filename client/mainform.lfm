@@ -197,6 +197,7 @@ object MainSearchForm: TMainSearchForm
       Width = 897
       Anchors = [akTop, akLeft, akRight]
       OnChange = SearchEditChange
+      OnKeyPress = SearchEditKeyPress
       TabOrder = 1
     end
     object SpeedButton1: TSpeedButton
