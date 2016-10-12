@@ -5,8 +5,12 @@ out/
 *.o
 *.a
 *.so
-
+*.ppu
 *.lps
+*.or
+*.rst
+*.compiled
+
 
 *.bak
 */lib/x86_64-linux
