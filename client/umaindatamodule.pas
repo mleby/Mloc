@@ -20,12 +20,16 @@ Type
     SQLQueryResult: TSQLQuery;
     SQLTransaction1: TSQLTransaction;
   Private
+    FDBPath: String;
     Function getDirectory(aPath: String): String;
+    Procedure SetDBPath(AValue: String);
   Public
     Function getPath: String;
     Function getDir: String;
     Function getCommand: String;
     Procedure DBSearch(Const aSearchTerm, aPath, aTag: string);
+
+    Property DBPath: String Read FDBPath Write SetDBPath;
   End;
 
 Var
@@ -63,6 +67,15 @@ End;
    If Not isDir Then
       Result := '';
  End;
+
+Procedure TDM.SetDBPath(AValue: String);
+Begin
+  If FDBPath = AValue Then Exit;
+  FDBPath := AValue;
+  SQLite3Connection1.Close();
+  SQLite3Connection1.DatabaseName := FDBPath;
+  SQLite3Connection1.Open;
+End;
 
 Function TDM.getCommand: String;
 Begin

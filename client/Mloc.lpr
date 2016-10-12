@@ -11,6 +11,8 @@ Uses
 
 {$R *.res}
 
+Var
+  lDbPath: String;
 Begin
   if Application.HasOption('h', 'help') then begin
     // TODO - vypsání helpu
@@ -20,6 +22,9 @@ Begin
   RequireDerivedFormResource := True;
   Application.Initialize;
   Application.CreateForm(TMainSearchForm, MainSearchForm);
+  Application.CreateForm(TsettingsForm, settingsForm);
+  Application.CreateForm(TRunUtils, RunUtils);
+  Application.CreateForm(TDM, DM);
 
   if Application.HasOption('d', 'delay') then
     MainSearchForm.Delay := StrToInt(Application.GetOptionValue('d', 'delay'))
@@ -30,6 +35,11 @@ Begin
     MainSearchForm.AutoQuery := StrToInt(Application.GetOptionValue('a', 'auto'))
   else
     MainSearchForm.AutoQuery := 3;
+
+  if Application.HasOption('l', 'localdb') then
+    DM.DBPath := Application.GetOptionValue('l', 'localdb')
+  else
+    DM.DBPath := IncludeTrailingPathDelimiter(GetUserDir) + '.mlocate.db';
 
   if Application.HasOption('p', 'path') then
     MainSearchForm.Path := Application.GetOptionValue('p', 'path');
@@ -46,9 +56,7 @@ Begin
   if Application.HasOption('q', 'query') then // q query
      MainSearchForm.Search(true);
 
-  Application.CreateForm(TsettingsForm, settingsForm);
-  Application.CreateForm(TRunUtils, RunUtils);
-  Application.CreateForm(TDM, DM);
+
 
   Application.Run;
 End.
