@@ -11,8 +11,6 @@ Uses
 
 {$R *.res}
 
-Var
-  lDbPath: String;
 Begin
   if Application.HasOption('h', 'help') then begin
     // TODO - vypsání helpu

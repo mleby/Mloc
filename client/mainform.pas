@@ -5,8 +5,8 @@ unit MainForm;
 interface
 
 uses
-  Classes, SysUtils, sqlite3conn, sqldb, DB, FileUtil, LConvEncoding, frmSelectProps, Forms, Controls,
-  Graphics, Dialogs, StdCtrls, DBGrids, ActnList, AsyncProcess,
+  Classes, SysUtils, sqlite3conn, sqldb, DB, FileUtil, LConvEncoding, Forms, Controls,
+  Graphics, Dialogs, StdCtrls, DBGrids, ActnList,
   ComCtrls, ExtCtrls, Menus, Clipbrd, Buttons, LCLProc, uSettingsForm, uRunUtils;
 
 type
@@ -73,7 +73,7 @@ type
     Procedure IdleTimer1Timer(Sender: TObject);
     procedure ResultDBGridDblClick(Sender: TObject);
     procedure acRunUpdate(Sender: TObject);
-    procedure ResultDBGridKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure ResultDBGridKeyDown(Sender: TObject; var Key: word);
     procedure SearchEditChange(Sender: TObject);
     Procedure SearchEditKeyPress(Sender: TObject; Var Key: char);
 
@@ -220,7 +220,7 @@ begin
   (Sender as TAction).Enabled := (DM.SQLQueryResult.RecordCount > 0);
 end;
 
-Procedure TMainSearchForm.ResultDBGridKeyDown(Sender: TObject; Var Key: word; Shift: TShiftState);
+Procedure TMainSearchForm.ResultDBGridKeyDown(Sender: TObject; Var Key: word);
 begin
   if Key = 13 then
     acRun.Execute;
@@ -255,7 +255,7 @@ Procedure TMainSearchForm.acHelpExecute(Sender: TObject);
 var
   i: Integer;
   lShortcutHelpFrm: TshortcutHelpFrm;
-  lHint, lName, lShortCut: String;
+  lHint, lShortCut: String;
 Begin
   lShortcutHelpFrm := TshortcutHelpFrm.Create(self);
   try
@@ -264,11 +264,10 @@ Begin
     for i := 0 to ActionList.ActionCount - 1 do
     begin
       lHint := (ActionList.Actions[i] as TAction).Hint;
-      lName := (ActionList.Actions[i] as TAction).Name;
       lShortCut := ShortCutToText((ActionList.Actions[i] as TAction).ShortCut);
 
       if lShortCut <> '' then
-         lShortcutHelpFrm.TextMemo.Lines.Append(lShortCut + ' : ' {+ lName + ' ' } + lHint);
+         lShortcutHelpFrm.TextMemo.Lines.Append(lShortCut + ' : ' + lHint);
     end;
 
     lShortcutHelpFrm.ShowModal;
