@@ -402,6 +402,12 @@ object MainSearchForm: TMainSearchForm
       OnExecute = acSettingsExecute
       ShortCut = 16463
     end
+    object acDs: TAction
+      Caption = 'RawDataSet'
+      Hint = 'Show raw dataset of results'
+      OnExecute = acDsExecute
+      ShortCut = 49220
+    end
   end
   object ResultPopUpMenu: TPopupMenu
     left = 576

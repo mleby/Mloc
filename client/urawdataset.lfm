@@ -1,0 +1,22 @@
+object RawDataSet: TRawDataSet
+  Left = 526
+  Height = 481
+  Top = 280
+  Width = 919
+  Caption = 'Raw DataSet'
+  ClientHeight = 481
+  ClientWidth = 919
+  Position = poDefault
+  LCLVersion = '1.6.0.4'
+  object DBGrid1: TDBGrid
+    Left = 0
+    Height = 481
+    Top = 0
+    Width = 919
+    Align = alClient
+    Color = clWindow
+    Columns = <>
+    DataSource = DM.DataSource1
+    TabOrder = 0
+  end
+end

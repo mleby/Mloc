@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, sqlite3conn, sqldb, DB, FileUtil, LConvEncoding, Forms, Controls,
   Graphics, Dialogs, StdCtrls, DBGrids, ActnList,
-  ComCtrls, ExtCtrls, Menus, Clipbrd, Buttons, LCLProc, uSettingsForm, uRunUtils;
+  ComCtrls, ExtCtrls, Menus, Clipbrd, Buttons, LCLProc, uSettingsForm, uRunUtils, uRawDataSet;
 
 type
 
@@ -25,6 +25,7 @@ type
     acHelp: TAction;
     acShowAdvanced: TAction;
     acSettings: TAction;
+    acDs: TAction;
     btnSearch: TButton;
     Button1: TButton;
     btSettings: TButton;
@@ -57,6 +58,7 @@ type
     Procedure acCommanderExecute(Sender: TObject);
     Procedure acCommanderUpdate(Sender: TObject);
     procedure acDownToListingUpdate(Sender: TObject);
+    Procedure acDsExecute(Sender: TObject);
     Procedure acEditExecute(Sender: TObject);
     Procedure acEditUpdate(Sender: TObject);
     Procedure acHelpExecute(Sender: TObject);
@@ -235,6 +237,18 @@ end;
 Procedure TMainSearchForm.acDownToListingUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := SearchEdit.Focused and (DM.SQLQueryResult.RecordCount > 0);
+end;
+
+Procedure TMainSearchForm.acDsExecute(Sender: TObject);
+Var
+  lDialog: TRawDataSet;
+Begin
+  lDialog := TRawDataSet.Create(self);
+  try
+    lDialog.ShowModal;
+  Finally
+    lDialog.Free;
+  End;
 end;
 
 Procedure TMainSearchForm.acEditExecute(Sender: TObject);

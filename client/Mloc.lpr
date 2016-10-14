@@ -7,7 +7,7 @@ Uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, MainForm, shortcutHelpForm, uSettingsForm, uRunUtils, uTools, uMainDataModule, sysutils;
+  Forms, MainForm, shortcutHelpForm, uSettingsForm, uRunUtils, uTools, uMainDataModule, sysutils, uRawDataSet;
 
 {$R *.res}
 
@@ -53,8 +53,6 @@ Begin
 
   if Application.HasOption('q', 'query') then // q query
      MainSearchForm.Search(true);
-
-
 
   Application.Run;
 End.
