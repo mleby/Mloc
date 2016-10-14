@@ -27,7 +27,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-l /tmp/prac.db"/>
+        <CommandLineParams Value="-l /tmp/prac.db -d -p /tmp:/home/martin/Stažené:/home/martin/Knihovna"/>
       </local>
     </RunParams>
     <RequiredPackages Count="2">
@@ -38,7 +38,7 @@
         <PackageName Value="SQLDBLaz"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="4">
+    <Units Count="6">
       <Unit0>
         <Filename Value="updatedb.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -61,6 +61,16 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uConsoleOutput"/>
       </Unit3>
+      <Unit4>
+        <Filename Value="uindexpath.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uIndexPath"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="uappcontext.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uAppContext"/>
+      </Unit5>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

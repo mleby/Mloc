@@ -48,22 +48,24 @@ End;
 
 Procedure TLogger.Err(Const aVallue: String);
 Begin
-
+  WriteLn(aVallue);
 End;
 
 Procedure TLogger.Warn(Const aVallue: String);
 Begin
-
+  WriteLn(aVallue);
 End;
 
 Procedure TLogger.Info(Const aVallue: String);
 Begin
-
+  if IsInfo then
+    WriteLn(aVallue);
 End;
 
 Procedure TLogger.Debug(Const aVallue: String);
 Begin
-
+  if IsDebug then
+      WriteLn(aVallue);
 End;
 
 End.
