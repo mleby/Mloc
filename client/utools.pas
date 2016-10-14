@@ -9,8 +9,12 @@ Uses
 
 Function removeDiacritics(aStr: String): String;
 Function NormalizeTerm(const aSearchTerm: String): string;
+function StripNonAlphaNumeric(const aValue: string): string;
 
 Implementation
+
+Uses
+  strutils, character;
 
 Function NormalizeTerm(const aSearchTerm: String): string;
 Var
@@ -19,7 +23,9 @@ begin
   lSearchTerm := removeDiacritics(aSearchTerm);
   lSearchTerm := LowerCase(lSearchTerm);
   lSearchTerm := Trim(lSearchTerm);
-  lSearchTerm := StringReplace(lSearchTerm, '  ', ' ', [rfReplaceAll, rfIgnoreCase]);
+  lSearchTerm := StripNonAlphaNumeric(lSearchTerm);
+  lSearchTerm := DelSpace1(lSearchTerm);
+  lSearchTerm := Trim(lSearchTerm);
   Result:=lSearchTerm;
 end;
 
@@ -76,6 +82,18 @@ begin
   //Švédština: å, ä, ö
   //Turečtina: ç, ş, ğ
   //Vietnamština: ă, â, đ, ê, ô, ơ, ư
+end;
+
+function StripNonAlphaNumeric(const aValue: string): string;
+var
+  C: Char;
+begin
+  Result := '';
+  for C in aValue do
+    if IsLetterOrDigit(C) then
+      Result := Result + C
+    else
+      Result := Result + ' ';
 end;
 
 End.

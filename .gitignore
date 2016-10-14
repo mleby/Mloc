@@ -16,3 +16,5 @@ out/
 */lib/x86_64-linux
 client/Mloc
 updatedb/updatedb
+tests/mloctests
+*.fpcunit.ini

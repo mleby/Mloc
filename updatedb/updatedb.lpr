@@ -6,7 +6,7 @@ Uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
   cthreads,
   {$ENDIF}{$ENDIF}
-  Classes, SysUtils, uTools, uMainDataModule, CustApp;
+  Classes, SysUtils, uTools, uMainDataModule, CustApp, uConsoleOutput;
 
 Type
 
@@ -80,7 +80,10 @@ Begin
 
     //cli.u(longOpt: 'update', 'Update index from source files in arg')
 
-  //if HasOption('p', 'path') then
+  if HasOption('p', 'path') then
+  begin
+
+  end;
     //MainSearchForm.Path := GetOptionValue('p', 'path');
     {TODO -oLebeda -cNone: simple write path}
     {TODO -oLebeda -cNone: create simple unit for commands}
