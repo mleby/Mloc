@@ -1,15 +1,15 @@
 object DM: TDM
   OldCreateOrder = False
-  Height = 344
-  HorizontalOffset = 1007
+  Height = 397
+  HorizontalOffset = 933
   VerticalOffset = 166
-  Width = 431
+  Width = 505
   object SQLite3Connection1: TSQLite3Connection
     Connected = True
     LoginPrompt = False
     DatabaseName = '/home/martin/.mlocate.db'
     KeepConnection = False
-    Transaction = SQLTransaction1
+    Transaction = SQLTransaction
     Options = []
     left = 264
     top = 32
@@ -17,15 +17,15 @@ object DM: TDM
   object SQLQueryCount: TSQLQuery
     FieldDefs = <>
     Database = SQLite3Connection1
-    Transaction = SQLTransaction1
+    Transaction = SQLTransaction
     ReadOnly = True
     Options = []
     Params = <>
     left = 136
     top = 104
   end
-  object SQLTransaction1: TSQLTransaction
-    Active = False
+  object SQLTransaction: TSQLTransaction
+    Active = True
     Database = SQLite3Connection1
     Options = []
     left = 136
@@ -34,7 +34,7 @@ object DM: TDM
   object DataSource1: TDataSource
     DataSet = SQLQueryResult
     left = 264
-    top = 192
+    top = 184
   end
   object SQLQueryResult: TSQLQuery
     FieldDefs = <    
@@ -87,7 +87,7 @@ object DM: TDM
         Size = 255
       end>
     Database = SQLite3Connection1
-    Transaction = SQLTransaction1
+    Transaction = SQLTransaction
     ReadOnly = True
     SQL.Strings = (
       'select * from sources where id in (select id from sourcesSearch where search MATCH ''zim* deb'')'
@@ -96,5 +96,36 @@ object DM: TDM
     Params = <>
     left = 264
     top = 104
+  end
+  object updateSQLQuery: TSQLQuery
+    FieldDefs = <>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction
+    Options = []
+    Params = <>
+    left = 264
+    top = 296
+  end
+  object tableExistsSQLQuery: TSQLQuery
+    FieldDefs = <    
+      item
+        Name = 'cnt'
+        DataType = ftLargeint
+        Precision = -1
+      end>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction
+    SQL.Strings = (
+      'SELECT COUNT(*) as cnt FROM sqlite_master WHERE type = ''table'' AND name = :tableName'
+    )
+    Options = []
+    Params = <    
+      item
+        DataType = ftString
+        Name = 'tableName'
+        ParamType = ptInput
+      end>
+    left = 136
+    top = 304
   end
 end

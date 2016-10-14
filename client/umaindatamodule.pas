@@ -5,7 +5,7 @@ Unit uMainDataModule;
 Interface
 
 Uses
-  Classes, SysUtils, sqlite3conn, sqldb, db, FileUtil;
+  Classes, SysUtils, sqlite3conn, sqldb, db;
 
 Type
 
@@ -16,13 +16,16 @@ Type
   TDM = Class(TDataModule)
     DataSource1: TDataSource;
     SQLite3Connection1: TSQLite3Connection;
+    updateSQLQuery: TSQLQuery;
     SQLQueryCount: TSQLQuery;
     SQLQueryResult: TSQLQuery;
-    SQLTransaction1: TSQLTransaction;
+    SQLTransaction: TSQLTransaction;
+    tableExistsSQLQuery: TSQLQuery;
   Private
     FDBPath: String;
     Function getDirectory(aPath: String): String;
     Procedure SetDBPath(AValue: String);
+    Function TableExists(aTableName: String): Boolean;
   Public
     Function getPath: String;
     Function getDir: String;
@@ -72,10 +75,44 @@ Procedure TDM.SetDBPath(AValue: String);
 Begin
   If FDBPath = AValue Then Exit;
   FDBPath := AValue;
+
   SQLite3Connection1.Close();
   SQLite3Connection1.DatabaseName := FDBPath;
   SQLite3Connection1.Open;
+
+
+  // create database structure if not exists
+  SQLite3Connection1.Transaction.Active := true;
+  SQLite3Connection1.ExecuteDirect('CREATE TABLE IF NOT EXISTS sources (id PRIMARY KEY, path, name, search, command, updated, tag, priority, trash, description)');
+  SQLite3Connection1.ExecuteDirect('CREATE INDEX IF NOT EXISTS tagIndex ON sources (tag)');
+
+  if not TableExists('sourcesSearch') then
+    SQLite3Connection1.ExecuteDirect('CREATE VIRTUAL TABLE sourcesSearch USING FTS4(id, search)');
+
+  SQLite3Connection1.Transaction.Commit;
+
+  //SQLite3Connection1.;
+////sql.setAutoCommit(false)
+// TODO - indexes - on sources tag, path
+{TODO -oLebeda -cNone: work table for update}
+
+
 End;
+
+Function TDM.TableExists(aTableName: String): Boolean;
+Begin
+  tableExistsSQLQuery.Close;
+  tableExistsSQLQuery.ParamByName('tableName').Value := aTableName;
+  tableExistsSQLQuery.Open;
+  Result := tableExistsSQLQuery.FieldByName('cnt').AsInteger > 0;
+End;
+
+//boolean isTableExists(String tableName) {
+//    sql.firstRow("SELECT COUNT(*) as cnt FROM sqlite_master WHERE type = 'table' AND name = ${tableName}").cnt > 0;
+//}
+
+{TODO -oLebeda -cNone: inteligent diferential reindex FT table}
+{TODO -oLebeda -cNone: vacuum DB after reindex}
 
 Function TDM.getCommand: String;
 Begin
