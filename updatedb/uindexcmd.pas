@@ -29,12 +29,12 @@ begin
     lTagWhere := ' and tag is null';
 
   DM.deleteByPathSQLQuery.SQL.Text := 'delete from sources where path = :value and trash is null' + lTagWhere;
-  App.Log.Debug(DM.deleteByPathSQLQuery.SQL.Text);
+  //App.Log.Debug(DM.deleteByPathSQLQuery.SQL.Text);
   DM.deleteByPathSQLQuery.ParamByName('value').AsString := ExcludeTrailingPathDelimiter(aPath);
   DM.deleteByPathSQLQuery.ExecSQL;
 
   DM.deleteByPathSQLQuery.SQL.Text := 'delete from sources where path like :value and trash is null' + lTagWhere;
-  App.Log.Debug(DM.deleteByPathSQLQuery.SQL.Text);
+  //App.Log.Debug(DM.deleteByPathSQLQuery.SQL.Text);
   DM.deleteByPathSQLQuery.ParamByName('value').AsString := IncludeTrailingPathDelimiter(aPath) + '%';
   DM.deleteByPathSQLQuery.ExecSQL;
 end;
