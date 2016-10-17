@@ -129,7 +129,7 @@ begin
         {TODO -oLebeda -cNone: delete path from DB}
         Log.Info('indexing path: ' + lPaths[i]);
         deletePath(lPaths[i]);
-        lCnt := lCnt + IndexPath(lPaths[i]);
+        lCnt := lCnt + IndexPath(lPaths[i], false);
         DM.SQLite3Connection1.Transaction.Commit;
       end;
 

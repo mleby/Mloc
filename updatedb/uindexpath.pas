@@ -7,14 +7,14 @@ interface
 uses
   Classes, SysUtils;
 
-function IndexPath(const aPath: string): longint;
+function IndexPath(const aPath: string; aAnnex: Boolean): longint;
 
 implementation
 
 uses
   uAppContext, FileUtil, uIndexCmd, process, StreamIO;
 
-function IndexPath(const aPath: string): longint;
+function IndexPath(const aPath: string; aAnnex: Boolean): longint;
 var
   lFiles, lDirs: TStringList;
   i: integer;
@@ -24,7 +24,9 @@ var
 begin
   Result := 0;
 
-  {TODO -oLebeda -cNone: git support}
+  if aAnnex or DirectoryExists(IncludeTrailingPathDelimiter(aPath) + '.git' + PathDelim + 'annex') then
+    aAnnex := true;
+
   if (App.Git <> '') and FileIsExecutable(App.Git) and DirectoryExists(IncludeTrailingPathDelimiter(aPath) + '.git') then
   begin
     App.Log.Debug('Using git for ' + aPath);
@@ -41,7 +43,7 @@ begin
       while not Eof(F) do
       begin
          Readln(F, lLine);
-         insertFile(IncludeTrailingPathDelimiter(aPath) + lLine);
+         insertFile(IncludeTrailingPathDelimiter(aPath) + lLine, aAnnex);
          Inc(Result);
       End;
       CloseFile(F);
@@ -78,7 +80,7 @@ begin
 
       //App.Log.Debug(lFiles[i]);
       {TODO -oLebeda -cNone: avfs support}
-      insertFile(lFiles[i]);
+      insertFile(lFiles[i], aAnnex);
       Inc(Result);
     end
   finally
@@ -91,7 +93,7 @@ begin
     begin
       {TODO -oLebeda -cNone: include/exclude param}
       //App.Log.Debug('Dir: ' + lDirs[i]);
-      Result := Result + IndexPath(lDirs[i]);
+      Result := Result + IndexPath(lDirs[i], aAnnex);
     end;
   finally
     lDirs.Free;

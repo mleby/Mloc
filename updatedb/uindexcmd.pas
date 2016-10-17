@@ -9,8 +9,8 @@ uses
 
 procedure deletePath(const aPath: string);
 procedure deleteTag;
-procedure insertFile(const aFileName: string);
-procedure insertCmd(const path, Name, command: string; const description: string = '');
+procedure insertFile(const aFileName: string; Const aAnnex: Boolean);
+procedure insertCmd(const path, Name, command: string; const aAnnex:Boolean; const description: string = '');
 Procedure refreshFtIndex;
 
 {TODO -oLebeda -cNone: refreshFtIndex}
@@ -19,7 +19,7 @@ implementation
 
 uses uMainDataModule, uTools, uAppContext;
 
-procedure deletePath(const aPath: string);
+Procedure deletePath(Const aPath: string);
 var
   lTagWhere: string;
 begin
@@ -39,18 +39,18 @@ begin
   DM.deleteByPathSQLQuery.ExecSQL;
 end;
 
-procedure deleteTag;
+Procedure deleteTag;
 begin
   DM.deleteByTagSQLQuery.ParamByName('tagname').AsString := App.Tag;
   DM.deleteByTagSQLQuery.ExecSQL;
 end;
 
-procedure insertFile(const aFileName: string);
+Procedure insertFile(Const aFileName: string; Const aAnnex: Boolean);
 begin
-  insertCmd(aFileName, ExtractFileName(aFileName), App.Cmd);
+  insertCmd(aFileName, ExtractFileName(aFileName), App.Cmd, aAnnex);
 end;
 
-procedure insertCmd(const path, Name, command: string; const description: string);
+Procedure insertCmd(Const path, Name, command: string; Const aAnnex: Boolean; Const description: string);
 var
   lGuid: TGUID;
   lSearch: string;
@@ -72,6 +72,7 @@ begin
     DM.insertSQLQuery.ParamByName('tag').Value := null;
   DM.insertSQLQuery.ParamByName('priority').AsFloat := App.Priority;
   DM.insertSQLQuery.ParamByName('trash').Value := null;
+  DM.insertSQLQuery.ParamByName('annex').AsBoolean := aAnnex;
   DM.insertSQLQuery.ParamByName('description').AsString := description;
   DM.insertSQLQuery.ExecSQL;
 end;

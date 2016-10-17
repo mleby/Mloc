@@ -87,7 +87,7 @@ begin
   // create database structure if not exists
   SQLite3Connection1.Transaction.Active := True;
   SQLite3Connection1.ExecuteDirect(
-    'CREATE TABLE IF NOT EXISTS sources (id PRIMARY KEY, path, name, search, command, updated, tag, priority, trash, description)');
+    'CREATE TABLE IF NOT EXISTS sources (id PRIMARY KEY, path, name, search, command, updated, tag, priority, trash, annex, description)');
   SQLite3Connection1.ExecuteDirect(
     'CREATE INDEX IF NOT EXISTS tagIndex ON sources (tag)');
 

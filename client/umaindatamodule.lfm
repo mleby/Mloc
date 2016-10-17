@@ -133,8 +133,8 @@ object DM: TDM
     Database = SQLite3Connection1
     Transaction = SQLTransaction
     SQL.Strings = (
-      'insert into sources (id, path, name, search, command, updated, tag, priority, trash, description)'
-      '  values (:id, :path, :name, :search, :command, :updated, :tag, :priority, :trash, :description)'
+      'insert into sources (id, path, name, search, command, updated, tag, priority, trash, annex, description)'
+      '  values (:id, :path, :name, :search, :command, :updated, :tag, :priority, :trash, :annex, :description)'
     )
     Options = []
     Params = <    
@@ -181,6 +181,11 @@ object DM: TDM
       item
         DataType = ftBoolean
         Name = 'trash'
+        ParamType = ptInput
+      end    
+      item
+        DataType = ftUnknown
+        Name = 'annex'
         ParamType = ptInput
       end    
       item
