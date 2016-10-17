@@ -1,6 +1,6 @@
 object DM: TDM
   OldCreateOrder = False
-  Height = 397
+  Height = 521
   HorizontalOffset = 933
   VerticalOffset = 166
   Width = 505
@@ -104,7 +104,7 @@ object DM: TDM
     Options = []
     Params = <>
     left = 264
-    top = 296
+    top = 264
   end
   object tableExistsSQLQuery: TSQLQuery
     FieldDefs = <    
@@ -125,7 +125,96 @@ object DM: TDM
         Name = 'tableName'
         ParamType = ptInput
       end>
-    left = 136
-    top = 304
+    left = 128
+    top = 264
+  end
+  object insertSQLQuery: TSQLQuery
+    FieldDefs = <>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction
+    SQL.Strings = (
+      'insert into sources (id, path, name, search, command, updated, tag, priority, trash, description)'
+      '  values (:id, :path, :name, :search, :command, :updated, :tag, :priority, :trash, :description)'
+    )
+    Options = []
+    Params = <    
+      item
+        DataType = ftTime
+        Name = 'id'
+        ParamType = ptInput
+      end    
+      item
+        DataType = ftString
+        Name = 'path'
+        ParamType = ptInput
+      end    
+      item
+        DataType = ftString
+        Name = 'name'
+        ParamType = ptInput
+      end    
+      item
+        DataType = ftString
+        Name = 'search'
+        ParamType = ptInput
+      end    
+      item
+        DataType = ftString
+        Name = 'command'
+        ParamType = ptInput
+      end    
+      item
+        DataType = ftDateTime
+        Name = 'updated'
+        ParamType = ptInput
+      end    
+      item
+        DataType = ftString
+        Name = 'tag'
+        ParamType = ptInput
+      end    
+      item
+        DataType = ftFloat
+        Name = 'priority'
+        ParamType = ptInput
+      end    
+      item
+        DataType = ftBoolean
+        Name = 'trash'
+        ParamType = ptInput
+      end    
+      item
+        DataType = ftString
+        Name = 'description'
+        ParamType = ptInput
+      end>
+    left = 264
+    top = 328
+  end
+  object deleteByPathSQLQuery: TSQLQuery
+    FieldDefs = <>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction
+    Options = []
+    Params = <>
+    left = 264
+    top = 392
+  end
+  object deleteByTagSQLQuery: TSQLQuery
+    FieldDefs = <>
+    Database = SQLite3Connection1
+    Transaction = SQLTransaction
+    SQL.Strings = (
+      'delete from sources where tag = :tagname'
+    )
+    Options = []
+    Params = <    
+      item
+        DataType = ftString
+        Name = 'tagname'
+        ParamType = ptInput
+      end>
+    left = 264
+    top = 456
   end
 end

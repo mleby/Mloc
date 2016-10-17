@@ -1,72 +1,71 @@
-Unit uConsoleOutput;
+unit uConsoleOutput;
 
 {$mode objfpc}{$H+}
 
-Interface
+interface
 
-Uses
+uses
   Classes, SysUtils;
 
-Type
+type
 
   { TLogger }
 
   TLogger = class(TObject)
   private
-    FDebug: Boolean;
-    FVerbose: Boolean;
-    Function IsDebug: Boolean;
-    Function IsInfo: Boolean;
+    FDebug: boolean;
+    FVerbose: boolean;
+    function IsDebug: boolean;
+    function IsInfo: boolean;
   public
-    Constructor Create(const aDebug, aVerbose: Boolean);
+    constructor Create(const aDebug, aVerbose: boolean);
 
-    procedure Err(const aVallue: String);
-    procedure Warn(const aVallue: String);
-    procedure Info(const aVallue: String);
-    procedure Debug(const aVallue: String);
+    procedure Err(const aVallue: string);
+    procedure Warn(const aVallue: string);
+    procedure Info(const aVallue: string);
+    procedure Debug(const aVallue: string);
   end;
 
-Implementation
+implementation
 
 { TLogger }
 
-Function TLogger.IsDebug: Boolean;
-Begin
+function TLogger.IsDebug: boolean;
+begin
   Result := FDebug;
-End;
+end;
 
-Function TLogger.IsInfo: Boolean;
-Begin
+function TLogger.IsInfo: boolean;
+begin
   Result := IsDebug or FVerbose;
-End;
+end;
 
-Constructor TLogger.Create(Const aDebug, aVerbose: Boolean);
-Begin
+constructor TLogger.Create(const aDebug, aVerbose: boolean);
+begin
   FDebug := aDebug;
   FVerbose := aVerbose;
-End;
+end;
 
-Procedure TLogger.Err(Const aVallue: String);
-Begin
+procedure TLogger.Err(const aVallue: string);
+begin
   WriteLn(aVallue);
-End;
+end;
 
-Procedure TLogger.Warn(Const aVallue: String);
-Begin
+procedure TLogger.Warn(const aVallue: string);
+begin
   WriteLn(aVallue);
-End;
+end;
 
-Procedure TLogger.Info(Const aVallue: String);
-Begin
+procedure TLogger.Info(const aVallue: string);
+begin
   if IsInfo then
     WriteLn(aVallue);
-End;
+end;
 
-Procedure TLogger.Debug(Const aVallue: String);
-Begin
+procedure TLogger.Debug(const aVallue: string);
+begin
   if IsDebug then
-      WriteLn(aVallue);
-End;
+    WriteLn(aVallue);
+end;
 
-End.
-
+end.

@@ -1,13 +1,16 @@
-Program updatedb;
+program updatedb;
 
 {$mode objfpc}{$H+}
 
-Uses uAppContext, uMainDataModule;
+uses
+  uAppContext,
+  uMainDataModule,
+  uIndexCmd;
 
-Var
+var
   Application: TUpdateDb;
-Begin
-  Application := TUpdateDb.Create(Nil);
+begin
+  Application := TUpdateDb.Create(nil);
   App := Application;
 
   Application.Title := 'Update DB';
@@ -17,5 +20,4 @@ Begin
 
   Application.Run;
   Application.Free;
-End.
-
+end.

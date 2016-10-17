@@ -1,71 +1,77 @@
-Unit uAppContext;
+unit uAppContext;
 
 {$mode objfpc}{$H+}
 
-Interface
+interface
 
-Uses
+uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
   cthreads,
   {$ENDIF}{$ENDIF}
   Classes, SysUtils, uMainDataModule, CustApp, uConsoleOutput, uIndexPath;
 
-Type
+type
 
   { TUpdateDb }
 
-  TUpdateDb = Class(TCustomApplication)
-  Private
-    FAvfs: String;
-    FDebug: Boolean;
-    FGit: Boolean;
-    FTag: String;
-    FVerbose: Boolean;
-    FPriority: Integer;
+  TUpdateDb = class(TCustomApplication)
+  private
+    FAvfs: string;
+    FDebug: boolean;
+    FGit: string;
+    FTag: string;
+    FCmd: string;
+    FVerbose: boolean;
+    FPriority: integer;
     FLog: TLogger;
 
-    Function GetOptionValueDef(Const aShort: char; Const aLong, aDefault: String): String;
+    function GetOptionValueDef(const aShort: char; const aLong, aDefault: string): string;
   protected
-    Procedure DoRun; override;
-  Public
-    Constructor Create(TheOwner: TComponent); override;
-    Destructor Destroy; override;
-    Procedure WriteHelp; virtual;
+    procedure DoRun; override;
+  public
+    constructor Create(TheOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure WriteHelp; virtual;
 
-    Property Debug: Boolean Read FDebug;
-    Property Verbose: Boolean Read FVerbose;
-    Property Git: Boolean Read FGit;
-    Property Avfs: String Read FAvfs;
-    Property Tag: String Read FTag;
-    Property Priority:Integer Read FPriority;
-    Property Log: TLogger Read FLog;
-  End;
+    property Debug: boolean read FDebug;
+    property Verbose: boolean read FVerbose;
+    property Git: string read FGit;
+    property Avfs: string read FAvfs;
+    property Tag: string read FTag;
+    property Cmd: string read FCmd;
+    property Priority: integer read FPriority;
+    property Log: TLogger read FLog;
+  end;
 
-var App: TUpdateDb; // application context
+var
+  App: TUpdateDb; // application context
 
-Implementation
+implementation
+
+uses uIndexCmd;
 
 { TUpdateDb }
 
-Function TUpdateDb.GetOptionValueDef(Const aShort: char; Const aLong, aDefault: String): String;
-Begin
-  if HasOption(aShort, aLong) then
+function TUpdateDb.GetOptionValueDef(const aShort: char; const aLong, aDefault: string): string;
+begin
+  if (aShort <> '_') and HasOption(aShort, aLong) then
     Result := GetOptionValue(aShort, aLong)
   else if (aShort = '_') and HasOption(aLong) then
-    Result := GetOptionValue(aLong)
+    Result := GetOptionValue(aShort, aLong)
   else
     Result := aDefault;
-End;
+end;
 
-Procedure TUpdateDb.DoRun;
+procedure TUpdateDb.DoRun;
 //Var
-  //ErrorMsg: String;
-Var
+//ErrorMsg: String;
+var
   lPaths: TStringList;
-  i: Integer;
-  lOptPath: String;
-  lCnt: LongInt;
-Begin
+  i: integer;
+  lOptPath: string;
+  lCnt: longint;
+  lStartTime: TDateTime;
+begin
   lCnt := 0;
 
   // quick check parameters
@@ -77,20 +83,25 @@ Begin
   //End;
 
   // parse parameters
-  If HasOption('h', 'help') Then Begin
+  if HasOption('h', 'help') then
+  begin
     WriteHelp;
     Terminate;
     Exit;
-  End;
+  end;
 
   // set application properties
   FTag := GetOptionValueDef('t', 'tag', '');
   FPriority := StrToInt(GetOptionValueDef('i', 'priority', '50'));
-  FGit := HasOption('git'); {TODO -oLebeda -cNone: git}
+  FGit := GetOptionValueDef('_', 'git', '');
   FAvfs := GetOptionValueDef('_', 'avfs', ''); {TODO -oLebeda -cNone: avfs}
   FVerbose := HasOption('v', 'verbose');
   FDebug := HasOption('d', 'debug');
+  FCmd := GetOptionValueDef('c', 'cmd-open', 'xdg-open');
+  {TODO -oLebeda -cNone: annex}
+
   FLog := TLogger.Create(FDebug, FVerbose);
+  lStartTime := now;
 
   // include/exclude
   {TODO -oLebeda -cNone: x exclude}
@@ -103,7 +114,7 @@ Begin
   DM.DBPath := GetOptionValueDef('l', 'localdb', IncludeTrailingPathDelimiter(GetUserDir) + '.mlocate.db');
   Log.Info('use DB: ' + DM.DBPath);
 
-    //cli.u(longOpt: 'update', 'Update index from source files in arg')
+  //cli.u(longOpt: 'update', 'Update index from source files in arg')
 
   if HasOption('p', 'path') then
   begin
@@ -117,48 +128,57 @@ Begin
       begin
         {TODO -oLebeda -cNone: delete path from DB}
         Log.Info('indexing path: ' + lPaths[i]);
+        deletePath(lPaths[i]);
         lCnt := lCnt + IndexPath(lPaths[i]);
+        DM.SQLite3Connection1.Transaction.Commit;
       end;
 
-    Finally
+    finally
       lPaths.Free;
-    End;
+    end;
   end;
 
-   {TODO -oLebeda -cNone: create simple unit for commands}
+  //cli._(longOpt: 'noreindex', 'ignore fulltext reindexation (for use in batch update)')
+  if HasOption('noreindex') then
+    Log.Info('Refresh of indexation was skipped.')
+  else
+  begin
+    Log.Info('Refreshing fulltext index and maitaining database');
+    refreshFtIndex;
+  end;
 
-    //cli.c(longOpt: 'cmd', 'Command for open scanned entries', args: 1, argName: 'cmdname')
-    //cli.p(longOpt: "path", "Simple recursive add paths in arg to index")
 
-    //cli._(longOpt: 'noreindex', 'ignore fulltext reindexation (for use in batch update)')
+  {TODO -oLebeda -cNone: statistic of database - count, oldder refresh, tags with count }
 
   // TODO - add your program here
-  Log.Info('done: ' + IntToStr(lCnt) + ' commands');
+  Log.Info('done: ' + IntToStr(lCnt) + ' items in ' + TimeToStr(now - lStartTime));
 
   // stop program loop
   Terminate;
-End;
+end;
 
-Constructor TUpdateDb.Create(TheOwner: TComponent);
-Begin
-  Inherited Create(TheOwner);
+constructor TUpdateDb.Create(TheOwner: TComponent);
+begin
+  inherited Create(TheOwner);
   StopOnException := True;
-End;
+end;
 
-Destructor TUpdateDb.Destroy;
-Begin
+destructor TUpdateDb.Destroy;
+begin
   DM.Free;
-  Inherited Destroy;
-End;
+  inherited Destroy;
+end;
 
-Procedure TUpdateDb.WriteHelp;
-Begin
+procedure TUpdateDb.WriteHelp;
+begin
   writeln('Usage: ', ExeName, ' -h');
   {TODO -oLebeda -cNone: Vypsání helpu}
   //cli.i(longOpt: 'priority', 'Priority for scanned entries in results', args: 1, argName: 'priority')
   //cli._(longOpt: 'git', 'if directory contain .git use "git ls-files" instead recursive direct listing')
   //cli._(longOpt: 'avfs', 'Path to avfs mount', args: 1, argName: 'avfsPath')
-End;
+  //cli.c(longOpt: 'cmd', 'Command for open scanned entries', args: 1, argName: 'cmdname')
+  //cli.p(longOpt: "path", "Simple recursive add paths in arg to index")
+  // noreindex
+end;
 
-End.
-
+end.

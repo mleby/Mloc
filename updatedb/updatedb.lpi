@@ -27,7 +27,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-l /tmp/prac.db -d -p /tmp:/home/martin/Stažené:/home/martin/Knihovna"/>
+        <CommandLineParams Value="-l /tmp/prac.db -d --git=/usr/bin/git -p /home/martin/Knihovna --noreindex"/>
       </local>
     </RunParams>
     <RequiredPackages Count="2">
@@ -38,7 +38,7 @@
         <PackageName Value="SQLDBLaz"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="updatedb.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -71,6 +71,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uAppContext"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="uindexcmd.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uIndexCmd"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
