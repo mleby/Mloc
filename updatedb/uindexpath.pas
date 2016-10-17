@@ -12,7 +12,7 @@ function IndexPath(const aPath: string; aAnnex: Boolean): longint;
 implementation
 
 uses
-  uAppContext, FileUtil, uIndexCmd, process, StreamIO;
+  uAppContext, FileUtil, uIndexCmd, process, StreamIO, strutils;
 
 function IndexPath(const aPath: string; aAnnex: Boolean): longint;
 var
@@ -20,7 +20,7 @@ var
   i: integer;
   lProcess: TProcess;
   F:Text;
-  lLine: String;
+  lLine, lAvfsDirName: String;
 begin
   Result := 0;
 
@@ -60,28 +60,36 @@ begin
     begin
       {TODO -oLebeda -cNone: include/exclude param}
 
-      {TODO -oLebeda -cNone: support for file filters}
-      //  // TODO podpora pro .desktop soubory
-      //  if (file.name.endsWith(".desktop")) {
-
-      //      def lines = file.readLines()
-
-      //      String name = lines.grep(~/^Name=.*/)?.join("")?.replaceFirst(/^Name=/, '')
-      //      String nameCz = lines.grep(~/^Name\[cz\]=.*/)?.join("")?.replaceFirst(/^Name.*?=/, '')
-      //      String comment = lines.grep(~/^Comment=.*/)?.join("")?.replaceFirst(/^Comment=/, '')
-      //      String commentCz = lines.grep(~/^Comment\[cz\]=.*/)?.join("")?.replaceFirst(/^Comment.*?=/, '')
-      //      String keywords = lines.grep(~/^Keywords=.*/)?.join("")?.replaceFirst(/^Keywords=/, '')
-
-      //      String description = [name, nameCz, comment, commentCz, keywords, file.name].join(" ").trim()
-      //      addValueToDB(file.absolutePath, name, cmdname, description)
-      //  } else { // obecné zařazení souboru
-      //      addValueToDB(file.absolutePath, file.name, cmdname)
-      //  }
-
-      //App.Log.Debug(lFiles[i]);
-      {TODO -oLebeda -cNone: avfs support}
       insertFile(lFiles[i], aAnnex);
       Inc(Result);
+
+      if (App.Avfs <> '') and (
+          AnsiEndsText('.zip', lFiles[i]) or
+          AnsiEndsText('.rar', lFiles[i]) or
+          AnsiEndsText('.tgz', lFiles[i]) or
+          AnsiEndsText('.tag.gz', lFiles[i]) or
+          AnsiEndsText('.tgz', lFiles[i]) or
+          AnsiEndsText('.tar.bz2', lFiles[i]) or
+          AnsiEndsText('.7z', lFiles[i]) or
+          AnsiEndsText('.jar', lFiles[i])
+        ) then
+      begin
+        lAvfsDirName := IncludeTrailingPathDelimiter(App.Avfs) + lFiles[i] + '#';
+
+        {TODO -oLebeda -cNone: better avfs support - use date for update}
+        //long changed = f.lastModified()
+        //long indexed = (Long) (sql.firstRow("select min(updated) as indexed from sources WHERE path like ${avfsPath + "%"}").indexed ?: 0)
+        //if (changed > indexed) {
+        //    println("index from avfs: ${avfsPath}")
+        //    cnt += processCommandLineInternal("$CMD_DELREC ${avfsPath}")
+        //    cnt += processCommandLineInternal("$CMD_PATH ${avfsPath}")
+        //} else {
+        //    println("index from cache: ${avfsPath}")
+        //    sql.execute("update sources set trash = null where path like ${avfsPath + "%"}")
+        //}
+
+        IndexPath(lAvfsDirName, false)
+      end;
     end
   finally
     lFiles.Free;

@@ -5,7 +5,7 @@ program updatedb;
 uses
   uAppContext,
   uMainDataModule,
-  uIndexCmd;
+  uIndexCmd, uContentResolver;
 
 var
   Application: TUpdateDb;

@@ -17,7 +17,7 @@ Procedure refreshFtIndex;
 
 implementation
 
-uses uMainDataModule, uTools, uAppContext;
+uses uMainDataModule, uTools, uAppContext, uContentResolver;
 
 Procedure deletePath(Const aPath: string);
 var
@@ -46,8 +46,11 @@ begin
 end;
 
 Procedure insertFile(Const aFileName: string; Const aAnnex: Boolean);
+Var
+  lContentResolver: IContentResolver;
 begin
-  insertCmd(aFileName, ExtractFileName(aFileName), App.Cmd, aAnnex);
+  lContentResolver := NewContentResolver(aFileName);
+  insertCmd(lContentResolver.GetPath, lContentResolver.GetName, App.Cmd, aAnnex, lContentResolver.GetDescription);
 end;
 
 Procedure insertCmd(Const path, Name, command: string; Const aAnnex: Boolean; Const description: string);
@@ -58,7 +61,6 @@ begin
   {TODO -oLebeda -cNone: run as batch}
   CreateGUID(lGuid);
   lSearch := Trim(App.Tag + ' ' + NormalizeTerm(Name) + ' ' + NormalizeTerm(description));
-
 
   DM.insertSQLQuery.ParamByName('id').AsString := GUIDToString(lGuid);
   DM.insertSQLQuery.ParamByName('path').AsString := path;
@@ -86,25 +88,9 @@ Begin
   DM.SQLite3Connection1.ExecuteDirect('INSERT INTO sourcesSearch (id, search) SELECT id, search FROM sources WHERE id NOT IN (SELECT id FROM sourcesSearch)');
   DM.SQLite3Connection1.Transaction.Commit;
 
-  //DM.SQLite3Connection1.Transaction.EndTransaction;
   DM.SQLite3Connection1.ExecuteDirect('End Transaction');  // End the transaction started by SQLdb
   DM.SQLite3Connection1.ExecuteDirect('VACUUM');
   DM.SQLite3Connection1.ExecuteDirect('Begin Transaction'); //Start a transaction for SQLdb to use
-  //DM.SQLite3Connection1.Transaction.StartTransaction;
 end;
-
-//def refreshFtIndex() {
-//    sql.execute("DELETE FROM sources WHERE trash = 1")
-
-//    if (reindex) {
-//        sql.withTransaction {
-//            sql.execute("DELETE FROM sourcesSearch WHERE id NOT IN (SELECT id FROM sources)")
-//            sql.execute("INSERT INTO sourcesSearch (id, search) SELECT id, search FROM sources WHERE id NOT IN (SELECT id FROM sourcesSearch)")
-//        }
-//        println("Reindexation completed")
-//    } else {
-//        println("Reindexation skipped")
-//    }
-//}
 
 end.

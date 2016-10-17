@@ -94,7 +94,7 @@ begin
   FTag := GetOptionValueDef('t', 'tag', '');
   FPriority := StrToInt(GetOptionValueDef('i', 'priority', '50'));
   FGit := GetOptionValueDef('_', 'git', '');
-  FAvfs := GetOptionValueDef('_', 'avfs', ''); {TODO -oLebeda -cNone: avfs}
+  FAvfs := GetOptionValueDef('_', 'avfs', '');
   FVerbose := HasOption('v', 'verbose');
   FDebug := HasOption('d', 'debug');
   FCmd := GetOptionValueDef('c', 'cmd-open', 'xdg-open');
@@ -114,7 +114,7 @@ begin
   DM.DBPath := GetOptionValueDef('l', 'localdb', IncludeTrailingPathDelimiter(GetUserDir) + '.mlocate.db');
   Log.Info('use DB: ' + DM.DBPath);
 
-  //cli.u(longOpt: 'update', 'Update index from source files in arg')
+  //cli.s(longOpt: 'from-source', 'Update index from source files in arg')
 
   if HasOption('p', 'path') then
   begin
@@ -126,7 +126,6 @@ begin
 
       for i := 0 to lPaths.Count - 1 do
       begin
-        {TODO -oLebeda -cNone: delete path from DB}
         Log.Info('indexing path: ' + lPaths[i]);
         deletePath(lPaths[i]);
         lCnt := lCnt + IndexPath(lPaths[i], false);
