@@ -1,12 +1,12 @@
 object RunUtils: TRunUtils
   OldCreateOrder = False
-  Height = 150
+  Height = 235
   HorizontalOffset = 745
   VerticalOffset = 202
   Width = 150
   object runAsyncProcess: TAsyncProcess
     Active = False
-    Options = []
+    Options = [poNoConsole]
     Priority = ppNormal
     StartupOptions = []
     ShowWindow = swoNone
@@ -19,5 +19,21 @@ object RunUtils: TRunUtils
     FillAttribute = 0
     left = 64
     top = 32
+  end
+  object runSyncProcess: TProcess
+    Active = False
+    Options = [poWaitOnExit, poNoConsole]
+    Priority = ppNormal
+    StartupOptions = []
+    ShowWindow = swoNone
+    WindowColumns = 0
+    WindowHeight = 0
+    WindowLeft = 0
+    WindowRows = 0
+    WindowTop = 0
+    WindowWidth = 0
+    FillAttribute = 0
+    left = 61
+    top = 112
   end
 end

@@ -33,6 +33,7 @@ type
     function getPath: string;
     function getDir: string;
     function getCommand: string;
+    function isAnnex: boolean;
     procedure DBSearch(const aSearchTerm, aPath, aTag: string);
     property DBPath: string read FDBPath write SetDBPath;
   end;
@@ -46,17 +47,17 @@ implementation
 
 { TDM }
 
-function TDM.getPath: string;
+Function TDM.getPath: string;
 begin
   Result := SQLQueryResult.FieldByName('path').AsString;
 end;
 
-function TDM.getDir: string;
+Function TDM.getDir: string;
 begin
   Result := getDirectory(SQLQueryResult.FieldByName('path').AsString);
 end;
 
-function TDM.getDirectory(aPath: string): string;
+Function TDM.getDirectory(aPath: string): string;
 var
   isDir: boolean;
 begin
@@ -73,7 +74,7 @@ begin
     Result := '';
 end;
 
-procedure TDM.SetDBPath(AValue: string);
+Procedure TDM.SetDBPath(AValue: string);
 begin
   if FDBPath = AValue then
     Exit;
@@ -104,7 +105,7 @@ begin
 
 end;
 
-function TDM.TableExists(aTableName: string): boolean;
+Function TDM.TableExists(aTableName: string): boolean;
 begin
   tableExistsSQLQuery.Close;
   tableExistsSQLQuery.ParamByName('tableName').Value := aTableName;
@@ -119,20 +120,25 @@ end;
 {TODO -oLebeda -cNone: inteligent diferential reindex FT table}
 {TODO -oLebeda -cNone: vacuum DB after reindex}
 
-function TDM.getCommand: string;
+Function TDM.getCommand: string;
 begin
   Result := SQLQueryResult.FieldByName('command').AsString;
 end;
 
-procedure TDM.DBSearch(const aSearchTerm, aPath, aTag: string);
+Function TDM.isAnnex: boolean;
+Begin
+  Result := SQLQueryResult.FieldByName('annex').AsBoolean;
+End;
+
+Procedure TDM.DBSearch(Const aSearchTerm, aPath, aTag: string);
 var
   lSelect: string;
   lWhere: string;
 begin
   lWhere := ' 1 = 1 ';
   if aSearchTerm <> '' then
-    lWhere := lWhere + ' and id in (select id from sourcesSearch where search MATCH ''' +
-      aSearchTerm + ''') ';
+    lWhere := lWhere + ' and id in (select id from sourcesSearch where search MATCH ''' + aSearchTerm + ''') ';
+
 
   if aPath <> '' then
     lWhere := lWhere + ' and path like ''' + aPath + '%'' ';

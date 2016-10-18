@@ -28,7 +28,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-t program -a 2 -d 200"/>
+        <CommandLineParams Value="-l /tmp/prac.db -s 'hobit docx'"/>
       </local>
     </RunParams>
     <RequiredPackages Count="4">
@@ -99,6 +99,7 @@
         <Filename Value="urawdataset.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="RawDataSet"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="uRawDataSet"/>
       </Unit7>

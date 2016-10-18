@@ -230,6 +230,9 @@ end;
 
 Procedure TMainSearchForm.acRunExecute(Sender: TObject);
 begin
+  if DM.isAnnex and (settingsForm.AnnexCmd <> '') then
+    RunUtils.RunSync(settingsForm.AnnexCmd, settingsForm.AnnexParams, DM.getDir, DM.getPath, '');
+
   RunUtils.RunAsync(DM.getCommand, '%p', DM.getDir, DM.getPath, '');
   MainSearchForm.Close;
 end;
