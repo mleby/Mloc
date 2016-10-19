@@ -165,6 +165,7 @@ end;
 destructor TUpdateDb.Destroy;
 begin
   DM.Free;
+  FLog.Free;
   inherited Destroy;
 end;
 

@@ -30,6 +30,7 @@ type
     procedure SetDBPath(AValue: string);
     function TableExists(aTableName: string): boolean;
   public
+    Constructor Create(AOwner: TComponent); override;
     function getPath: string;
     function getDir: string;
     function getCommand: string;
@@ -42,6 +43,8 @@ var
   DM: TDM;
 
 implementation
+
+Uses sqlite3, strutils;
 
 {$R *.lfm}
 
@@ -112,6 +115,21 @@ begin
   tableExistsSQLQuery.Open;
   Result := tableExistsSQLQuery.FieldByName('cnt').AsInteger > 0;
 end;
+
+procedure SqlReverse(ctx: psqlite3_context; N: LongInt; V: ppsqlite3_value); cdecl;
+var S: String;
+begin
+  SetString(S, sqlite3_value_text(V[0]), sqlite3_value_bytes(V[0]));
+  S := ReverseString(S);
+  sqlite3_result_text(ctx, PAnsiChar(S), Length(S), sqlite3_destructor_type(SQLITE_TRANSIENT));
+End;
+
+Constructor TDM.Create(AOwner: TComponent);
+Begin
+  Inherited Create(AOwner);
+
+  sqlite3_create_function(SQLite3Connection1.Handle, 'reverse', 1, SQLITE_UTF8, nil, @SqlReverse, nil, nil);
+End;
 
 //boolean isTableExists(String tableName) {
 //    sql.firstRow("SELECT COUNT(*) as cnt FROM sqlite_master WHERE type = 'table' AND name = ${tableName}").cnt > 0;

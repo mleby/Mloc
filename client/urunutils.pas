@@ -69,7 +69,6 @@ Procedure TRunUtils.RunSync(Const aCmd, aParams, aDir, aPath, aName: string);
 var
   sl: TStringList;
   lParams: string;
-  i: Integer;
 begin
   // replace macros
   if aDir <> '' then

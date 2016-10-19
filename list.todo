@@ -1,0 +1,16 @@
+- updatedb
+  - directory Obrázky hází chybu
+  - podcasts, projects - filter for suffix
+  - filter for prune directories - .svn, ...
+  - load special file with extern created list - command, params
+
+
+- GUI
+  - obarvit nedostupné soubory, annex symlinky stažené/nestažené
+
+- program locate 
+  - compatible output with std locate
+  - --color as GUI
+  - output for menu (projects lpr, idea)
+  - sort by date modification
+  - top result

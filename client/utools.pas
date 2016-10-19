@@ -1,23 +1,24 @@
-Unit uTools;
+unit uTools;
 
 {$mode objfpc}{$H+}
 
-Interface
+interface
 
-Uses
+uses
   Classes, SysUtils;
 
-Function removeDiacritics(aStr: String): String;
-Function NormalizeTerm(const aSearchTerm: String): string;
+function removeDiacritics(aStr: string): string;
+function NormalizeTerm(const aSearchTerm: string): string;
 function StripNonAlphaNumeric(const aValue: string): string;
+function CopyAndSplitCammelCaseString(const aValue: string): string;
 
-Implementation
+implementation
 
-Uses
+uses
   strutils, character;
 
-Function NormalizeTerm(const aSearchTerm: String): string;
-Var
+function NormalizeTerm(const aSearchTerm: string): string;
+var
   lSearchTerm: string;
 begin
   lSearchTerm := removeDiacritics(aSearchTerm);
@@ -26,10 +27,10 @@ begin
   lSearchTerm := StripNonAlphaNumeric(lSearchTerm);
   lSearchTerm := DelSpace1(lSearchTerm);
   lSearchTerm := Trim(lSearchTerm);
-  Result:=lSearchTerm;
+  Result := lSearchTerm;
 end;
 
-Function removeDiacritics(aStr: String): String;
+function removeDiacritics(aStr: string): string;
 begin
   Result := aStr;
 
@@ -86,7 +87,7 @@ end;
 
 function StripNonAlphaNumeric(const aValue: string): string;
 var
-  C: Char;
+  C: char;
 begin
   Result := '';
   for C in aValue do
@@ -96,5 +97,26 @@ begin
       Result := Result + ' ';
 end;
 
-End.
+function CopyAndSplitCammelCaseString(const aValue: string): string;
+const
+  ALPHA_CHARS = ['a'..'z', 'A'..'Z', '0'..'9'];
+Var
+  C, O: Char;
+  lUpraveno: String;
+begin
+  O := ' ';
+  Result := aValue;
+  for C in aValue do
+  begin
+    if (C = UpperCase(C)) and (O in ALPHA_CHARS) then
+      lUpraveno := lUpraveno + ' ';
+    lUpraveno := lUpraveno + C;
+    O := C;
+  End;
+
+  if Result <> lUpraveno then
+    Result := DelSpace1(Result + ' ' + lUpraveno);
+end;
+
+end.
 

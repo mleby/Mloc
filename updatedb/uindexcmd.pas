@@ -60,7 +60,7 @@ var
 begin
   {TODO -oLebeda -cNone: run as batch}
   CreateGUID(lGuid);
-  lSearch := Trim(App.Tag + ' ' + NormalizeTerm(Name) + ' ' + NormalizeTerm(description));
+  lSearch := Trim(App.Tag + ' ' + NormalizeTerm(CopyAndSplitCammelCaseString(Name)) + ' ' + NormalizeTerm(description));
 
   DM.insertSQLQuery.ParamByName('id').AsString := GUIDToString(lGuid);
   DM.insertSQLQuery.ParamByName('path').AsString := path;
