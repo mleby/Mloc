@@ -52,11 +52,11 @@ function NewContentResolver(const aFileName: string): IContentResolver;
 
 implementation
 
-uses strutils;
+uses strutils, FileUtil;
 
 function NewContentResolver(const aFileName: string): IContentResolver;
 begin
-  if AnsiEndsText('.desktop', aFileName) then
+  if AnsiEndsText('.desktop', aFileName) and FileIsReadable(aFileName) then
     Result := TDesktopResolver.Create(aFileName)
   else
     Result := TBaseResolver.Create(aFileName);

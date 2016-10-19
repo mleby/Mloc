@@ -10,7 +10,7 @@ uses
 procedure deletePath(const aPath: string);
 procedure deleteTag;
 procedure insertFile(const aFileName: string; Const aAnnex: Boolean);
-procedure insertCmd(const path, Name, command: string; const aAnnex:Boolean; const description: string = '');
+procedure insertCmd(const aPath, aName, aCommand: string; const aAnnex:Boolean; const aDescription: string = '');
 Procedure refreshFtIndex;
 
 {TODO -oLebeda -cNone: refreshFtIndex}
@@ -53,20 +53,23 @@ begin
   insertCmd(lContentResolver.GetPath, lContentResolver.GetName, App.Cmd, aAnnex, lContentResolver.GetDescription);
 end;
 
-Procedure insertCmd(Const path, Name, command: string; Const aAnnex: Boolean; Const description: string);
+Procedure insertCmd(Const aPath, aName, aCommand: string; Const aAnnex: Boolean; Const aDescription: string);
 var
   lGuid: TGUID;
   lSearch: string;
 begin
   {TODO -oLebeda -cNone: run as batch}
   CreateGUID(lGuid);
-  lSearch := Trim(App.Tag + ' ' + NormalizeTerm(CopyAndSplitCammelCaseString(Name)) + ' ' + NormalizeTerm(description));
+  lSearch := Trim(App.Tag + ' '
+      + NormalizeTerm(CopyAndSplitCammelCaseString(aName)) + ' '
+      + NormalizeTerm(aDescription) + ' '
+      + NormalizeTerm(CopyAndSplitCammelCaseString(ExtractFileName(aPath))));
 
   DM.insertSQLQuery.ParamByName('id').AsString := GUIDToString(lGuid);
-  DM.insertSQLQuery.ParamByName('path').AsString := path;
-  DM.insertSQLQuery.ParamByName('name').AsString := Name;
+  DM.insertSQLQuery.ParamByName('path').AsString := aPath;
+  DM.insertSQLQuery.ParamByName('name').AsString := aName;
   DM.insertSQLQuery.ParamByName('search').AsString := lSearch;
-  DM.insertSQLQuery.ParamByName('command').AsString := command;
+  DM.insertSQLQuery.ParamByName('command').AsString := aCommand;
   DM.insertSQLQuery.ParamByName('updated').AsDateTime := Now;
   if App.Tag <> '' then
     DM.insertSQLQuery.ParamByName('tag').AsString := App.Tag
@@ -75,7 +78,7 @@ begin
   DM.insertSQLQuery.ParamByName('priority').AsFloat := App.Priority;
   DM.insertSQLQuery.ParamByName('trash').Value := null;
   DM.insertSQLQuery.ParamByName('annex').AsBoolean := aAnnex;
-  DM.insertSQLQuery.ParamByName('description').AsString := description;
+  DM.insertSQLQuery.ParamByName('description').AsString := aDescription;
   DM.insertSQLQuery.ExecSQL;
 end;
 
