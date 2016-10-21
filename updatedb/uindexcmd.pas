@@ -14,8 +14,6 @@ procedure insertCmd(const aPath, aName, aCommand: string; const aAnnex:Boolean; 
 Procedure refreshFtIndex;
 Procedure clearTrash;
 
-{TODO -oLebeda -cNone: refreshFtIndex}
-
 implementation
 
 uses uMainDataModule, uTools, uAppContext, uContentResolver;
@@ -54,7 +52,6 @@ var
   lGuid: TGUID;
   lSearch: string;
 begin
-  {TODO -oLebeda -cNone: run as batch}
   CreateGUID(lGuid);
   lSearch := Trim(App.Tag + ' '
       + NormalizeTerm(CopyAndSplitCammelCaseString(aName)) + ' '
@@ -80,9 +77,7 @@ end;
 
 Procedure refreshFtIndex;
 Begin
-  //{TODO -oLebeda -cNone: zajistit korektní reindexaci explicitním příkazem}
   DM.SQLite3Connection1.ExecuteDirect('DELETE FROM sourcesSearch WHERE id NOT IN (SELECT id FROM sources)');
-  //DM.SQLite3Connection1.ExecuteDirect('INSERT INTO sourcesSearch (id, search) SELECT id, search FROM sources WHERE id NOT IN (SELECT id FROM sourcesSearch)');
   DM.SQLite3Connection1.Transaction.Commit;
 
   DM.SQLite3Connection1.ExecuteDirect('End Transaction');  // End the transaction started by SQLdb

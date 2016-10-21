@@ -98,18 +98,13 @@ begin
   FVerbose := HasOption('v', 'verbose');
   FDebug := HasOption('d', 'debug');
   FCmd := GetOptionValueDef('c', 'cmd-open', 'xdg-open');
-  {TODO -oLebeda -cNone: annex}
 
   FLog := TLogger.Create(FDebug, FVerbose);
   lStartTime := now;
 
   // include/exclude
   {TODO -oLebeda -cNone: x exclude}
-  {TODO -oLebeda -cNone: iexclude}
   {TODO -oLebeda -cNone: include }
-  {TODO -oLebeda -cNone: iinclude}
-  // TObjectList
-  // vzor, start|end|any, ignoreCase
 
   DM.DBPath := GetOptionValueDef('l', 'localdb', IncludeTrailingPathDelimiter(GetUserDir) + '.mlocate.db');
   Log.Info('use DB: ' + DM.DBPath);
@@ -150,10 +145,6 @@ begin
     refreshFtIndex;
   end;
 
-
-  {TODO -oLebeda -cNone: statistic of database - count, oldder refresh, tags with count }
-
-  // TODO - add your program here
   Log.Info('done: ' + IntToStr(lCnt) + ' items in ' + TimeToStr(now - lStartTime));
 
   // stop program loop

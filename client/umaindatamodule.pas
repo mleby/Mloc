@@ -11,8 +11,6 @@ type
 
   { TDM }
 
-  // TODO - nastavení DB souboru
-
   TDM = class(TDataModule)
     DataSource1: TDataSource;
     SQLite3Connection1: TSQLite3Connection;
@@ -120,12 +118,6 @@ begin
   SQLite3Connection1.ExecuteDirect('PRAGMA temp_store=2');
   SQLite3Connection1.ExecuteDirect('PRAGMA PAGE_SIZE=4096');
   DM.SQLite3Connection1.ExecuteDirect('Begin Transaction'); //Start a transaction for SQLdb to use
-
-  //SQLite3Connection1.;
-  ////sql.setAutoCommit(false)
-  // TODO - indexes - on sources tag, path
-  {TODO -oLebeda -cNone: work table for update}
-
 end;
 
 Function TDM.TableExists(aTableName: string): boolean;
@@ -150,13 +142,6 @@ Begin
 
   sqlite3_create_function(SQLite3Connection1.Handle, 'reverse', 1, SQLITE_UTF8, nil, @SqlReverse, nil, nil);
 End;
-
-//boolean isTableExists(String tableName) {
-//    sql.firstRow("SELECT COUNT(*) as cnt FROM sqlite_master WHERE type = 'table' AND name = ${tableName}").cnt > 0;
-//}
-
-{TODO -oLebeda -cNone: inteligent diferential reindex FT table}
-{TODO -oLebeda -cNone: vacuum DB after reindex}
 
 Function TDM.getCommand: string;
 begin

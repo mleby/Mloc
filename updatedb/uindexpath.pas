@@ -106,8 +106,6 @@ begin
   finally
     lDirs.Free;
   end;
-
-  {TODO -oLebeda -cNone: symlinky - annex}
 end;
 
 end.
