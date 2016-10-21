@@ -90,16 +90,29 @@ begin
 
   // create database structure if not exists
   SQLite3Connection1.Transaction.Active := True;
-  SQLite3Connection1.ExecuteDirect(
-    'CREATE TABLE IF NOT EXISTS sources (id PRIMARY KEY, path, name, search, command, updated, tag, priority, trash, annex, description)');
-  SQLite3Connection1.ExecuteDirect(
-    'CREATE INDEX IF NOT EXISTS tagIndex ON sources (tag)');
+  SQLite3Connection1.ExecuteDirect('CREATE TABLE IF NOT EXISTS sources (id PRIMARY KEY, path NOT NULL, name NOT NULL, search NOT NULL, command, updated, tag NOT NULL, priority NOT NULL, trash, annex, description)');
+  SQLite3Connection1.ExecuteDirect('CREATE INDEX IF NOT EXISTS tagIndex ON sources (tag)');
+  SQLite3Connection1.ExecuteDirect('CREATE INDEX IF NOT EXISTS trashIndex ON sources (trash)');
 
   if not TableExists('sourcesSearch') then
-    SQLite3Connection1.ExecuteDirect(
-      'CREATE VIRTUAL TABLE sourcesSearch USING FTS4(id, search)');
+    SQLite3Connection1.ExecuteDirect('CREATE VIRTUAL TABLE sourcesSearch USING FTS4(id, search)');
+
+  SQLite3Connection1.ExecuteDirect('CREATE TRIGGER IF NOT EXISTS insert_sources AFTER INSERT ON sources'
+    + ' BEGIN'
+    + '   INSERT INTO sourcesSearch (id, search) values (new.id, new.search);'
+    + ' END;');
+
+  SQLite3Connection1.ExecuteDirect('create unique index if not exists sourcesUniq on sources (path, tag)');
 
   SQLite3Connection1.Transaction.Commit;
+
+  DM.SQLite3Connection1.ExecuteDirect('End Transaction');  // End the transaction started by SQLdb
+  SQLite3Connection1.ExecuteDirect('PRAGMA synchronous=OFF');
+  SQLite3Connection1.ExecuteDirect('PRAGMA cache_size = -' + IntToStr(1024*1024*2)); // 2GB
+  SQLite3Connection1.ExecuteDirect('PRAGMA journal_mode=MEMORY');
+  SQLite3Connection1.ExecuteDirect('PRAGMA temp_store=2');
+  SQLite3Connection1.ExecuteDirect('PRAGMA PAGE_SIZE=4096');
+  DM.SQLite3Connection1.ExecuteDirect('Begin Transaction'); //Start a transaction for SQLdb to use
 
   //SQLite3Connection1.;
   ////sql.setAutoCommit(false)

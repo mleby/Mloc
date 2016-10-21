@@ -74,7 +74,7 @@ begin
   if App.Tag <> '' then
     DM.insertSQLQuery.ParamByName('tag').AsString := App.Tag
   else
-    DM.insertSQLQuery.ParamByName('tag').Value := null;
+    DM.insertSQLQuery.ParamByName('tag').Value := ''; // not null because need unique indexed
   DM.insertSQLQuery.ParamByName('priority').AsFloat := App.Priority;
   DM.insertSQLQuery.ParamByName('trash').Value := null;
   DM.insertSQLQuery.ParamByName('annex').AsBoolean := aAnnex;
@@ -87,8 +87,9 @@ Begin
   DM.SQLite3Connection1.ExecuteDirect('DELETE FROM sources WHERE trash = 1');
   DM.SQLite3Connection1.Transaction.Commit;
 
+  //{TODO -oLebeda -cNone: zajistit korektní reindexaci explicitním příkazem}
   DM.SQLite3Connection1.ExecuteDirect('DELETE FROM sourcesSearch WHERE id NOT IN (SELECT id FROM sources)');
-  DM.SQLite3Connection1.ExecuteDirect('INSERT INTO sourcesSearch (id, search) SELECT id, search FROM sources WHERE id NOT IN (SELECT id FROM sourcesSearch)');
+  //DM.SQLite3Connection1.ExecuteDirect('INSERT INTO sourcesSearch (id, search) SELECT id, search FROM sources WHERE id NOT IN (SELECT id FROM sourcesSearch)');
   DM.SQLite3Connection1.Transaction.Commit;
 
   DM.SQLite3Connection1.ExecuteDirect('End Transaction');  // End the transaction started by SQLdb

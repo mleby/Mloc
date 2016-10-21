@@ -133,7 +133,7 @@ object DM: TDM
     Database = SQLite3Connection1
     Transaction = SQLTransaction
     SQL.Strings = (
-      'insert into sources (id, path, name, search, command, updated, tag, priority, trash, annex, description)'
+      'insert or ignore into sources (id, path, name, search, command, updated, tag, priority, trash, annex, description)'
       '  values (:id, :path, :name, :search, :command, :updated, :tag, :priority, :trash, :annex, :description)'
     )
     Options = []
