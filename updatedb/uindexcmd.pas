@@ -7,11 +7,12 @@ interface
 uses
   Classes, SysUtils;
 
-procedure deletePath(const aPath: string);
+procedure markPathAsTrash(const aPath: string);
 procedure deleteTag;
 procedure insertFile(const aFileName: string; Const aAnnex: Boolean);
 procedure insertCmd(const aPath, aName, aCommand: string; const aAnnex:Boolean; const aDescription: string = '');
 Procedure refreshFtIndex;
+Procedure clearTrash;
 
 {TODO -oLebeda -cNone: refreshFtIndex}
 
@@ -19,23 +20,18 @@ implementation
 
 uses uMainDataModule, uTools, uAppContext, uContentResolver;
 
-Procedure deletePath(Const aPath: string);
-var
-  lTagWhere: string;
+Procedure markPathAsTrash(Const aPath: string);
 begin
-  if App.Tag <> '' then
-    lTagWhere := ' and tag=''' + App.Tag + ''''
-  else
-    lTagWhere := ' and tag is null';
-
-  DM.deleteByPathSQLQuery.SQL.Text := 'delete from sources where path = :value and trash is null' + lTagWhere;
+  DM.deleteByPathSQLQuery.SQL.Text := 'update sources set trash = 1 where path = :value and tag=:tag';
   //App.Log.Debug(DM.deleteByPathSQLQuery.SQL.Text);
   DM.deleteByPathSQLQuery.ParamByName('value').AsString := ExcludeTrailingPathDelimiter(aPath);
+  DM.deleteByPathSQLQuery.ParamByName('tag').AsString := App.Tag;
   DM.deleteByPathSQLQuery.ExecSQL;
 
-  DM.deleteByPathSQLQuery.SQL.Text := 'delete from sources where path like :value and trash is null' + lTagWhere;
+  DM.deleteByPathSQLQuery.SQL.Text := 'update sources set trash = 1 where path like :value and tag=:tag';
   //App.Log.Debug(DM.deleteByPathSQLQuery.SQL.Text);
   DM.deleteByPathSQLQuery.ParamByName('value').AsString := IncludeTrailingPathDelimiter(aPath) + '%';
+  DM.deleteByPathSQLQuery.ParamByName('tag').AsString := App.Tag;
   DM.deleteByPathSQLQuery.ExecSQL;
 end;
 
@@ -76,7 +72,7 @@ begin
   else
     DM.insertSQLQuery.ParamByName('tag').Value := ''; // not null because need unique indexed
   DM.insertSQLQuery.ParamByName('priority').AsFloat := App.Priority;
-  DM.insertSQLQuery.ParamByName('trash').Value := null;
+  DM.insertSQLQuery.ParamByName('trash').AsBoolean := false;
   DM.insertSQLQuery.ParamByName('annex').AsBoolean := aAnnex;
   DM.insertSQLQuery.ParamByName('description').AsString := aDescription;
   DM.insertSQLQuery.ExecSQL;
@@ -84,9 +80,6 @@ end;
 
 Procedure refreshFtIndex;
 Begin
-  DM.SQLite3Connection1.ExecuteDirect('DELETE FROM sources WHERE trash = 1');
-  DM.SQLite3Connection1.Transaction.Commit;
-
   //{TODO -oLebeda -cNone: zajistit korektní reindexaci explicitním příkazem}
   DM.SQLite3Connection1.ExecuteDirect('DELETE FROM sourcesSearch WHERE id NOT IN (SELECT id FROM sources)');
   //DM.SQLite3Connection1.ExecuteDirect('INSERT INTO sourcesSearch (id, search) SELECT id, search FROM sources WHERE id NOT IN (SELECT id FROM sourcesSearch)');
@@ -95,6 +88,12 @@ Begin
   DM.SQLite3Connection1.ExecuteDirect('End Transaction');  // End the transaction started by SQLdb
   DM.SQLite3Connection1.ExecuteDirect('VACUUM');
   DM.SQLite3Connection1.ExecuteDirect('Begin Transaction'); //Start a transaction for SQLdb to use
+end;
+
+Procedure clearTrash;
+Begin
+  DM.SQLite3Connection1.ExecuteDirect('DELETE FROM sources WHERE trash = 1');
+  DM.SQLite3Connection1.Transaction.Commit;
 end;
 
 end.

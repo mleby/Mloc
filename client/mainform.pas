@@ -179,8 +179,8 @@ Begin
         if NormalizeChb.Checked then
         begin
           lSearchTerm := NormalizeTerm(lSearchTerm);
-          lSearchTerm := StringReplace(lSearchTerm, ' ', '* *', [rfReplaceAll, rfIgnoreCase]);
-          lSearchTerm := '*' + lSearchTerm + '*';
+          lSearchTerm := StringReplace(lSearchTerm, ' ', '* ', [rfReplaceAll, rfIgnoreCase]);
+          lSearchTerm := Trim(lSearchTerm + '*');
         end;
       End;
 
@@ -189,6 +189,8 @@ Begin
       //
       //If FTag <> '' Then
       //  StatusBar.Panels[3].Text := FTag;
+
+      StatusBar.Panels[0].Text := 'searching "' + lSearchTerm + '"...';
 
       DM.DBSearch(lSearchTerm, FPath, FTag);
 

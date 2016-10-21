@@ -90,7 +90,7 @@ begin
 
   // create database structure if not exists
   SQLite3Connection1.Transaction.Active := True;
-  SQLite3Connection1.ExecuteDirect('CREATE TABLE IF NOT EXISTS sources (id PRIMARY KEY, path NOT NULL, name NOT NULL, search NOT NULL, command, updated, tag NOT NULL, priority NOT NULL, trash, annex, description)');
+  SQLite3Connection1.ExecuteDirect('CREATE TABLE IF NOT EXISTS sources (id PRIMARY KEY, path NOT NULL, name NOT NULL, search NOT NULL, command, updated, tag NOT NULL, priority NOT NULL, trash, annex NOT NULL, description)');
   SQLite3Connection1.ExecuteDirect('CREATE INDEX IF NOT EXISTS tagIndex ON sources (tag)');
   SQLite3Connection1.ExecuteDirect('CREATE INDEX IF NOT EXISTS trashIndex ON sources (trash)');
 
@@ -102,7 +102,14 @@ begin
     + '   INSERT INTO sourcesSearch (id, search) values (new.id, new.search);'
     + ' END;');
 
+  SQLite3Connection1.ExecuteDirect('create trigger IF NOT EXISTS check_unique_source before insert on sources'
+    + ' begin'
+    + '  update or Ignore sources set trash = 0 where path = new.path and tag = new.tag;'
+    + '  select RAISE(ignore) from sources where path = new.path and tag = new.tag;'
+    + ' end');
+
   SQLite3Connection1.ExecuteDirect('create unique index if not exists sourcesUniq on sources (path, tag)');
+  SQLite3Connection1.ExecuteDirect('create unique index if not exists sourcesUniq2 on sources (id, trash, tag)');
 
   SQLite3Connection1.Transaction.Commit;
 
@@ -166,16 +173,17 @@ var
   lSelect: string;
   lWhere: string;
 begin
-  lWhere := ' 1 = 1 ';
+  lWhere := ' trash = 0 ';
   if aSearchTerm <> '' then
     lWhere := lWhere + ' and id in (select id from sourcesSearch where search MATCH ''' + aSearchTerm + ''') ';
-
 
   if aPath <> '' then
     lWhere := lWhere + ' and path like ''' + aPath + '%'' ';
 
   if aTag <> '' then
     lWhere := lWhere + ' and tag = ''' + aTag + ''' ';
+
+  //lWhere := lWhere + ' and trash = 0 ';
 
   lWhere := lWhere + ' order by priority, name, path';
 

@@ -127,7 +127,7 @@ begin
       for i := 0 to lPaths.Count - 1 do
       begin
         Log.Info('indexing path: ' + lPaths[i]);
-        deletePath(lPaths[i]);
+        markPathAsTrash(lPaths[i]);
         lCnt := lCnt + IndexPath(lPaths[i], false);
         DM.SQLite3Connection1.Transaction.Commit;
       end;
@@ -139,10 +139,14 @@ begin
 
   //cli._(longOpt: 'noreindex', 'ignore fulltext reindexation (for use in batch update)')
   if HasOption('noreindex') then
-    Log.Info('Refresh of indexation was skipped.')
+  begin
+    Log.Info('Refresh of indexation was skipped, only clean trash.');
+    clearTrash;
+  End
   else
   begin
     Log.Info('Refreshing fulltext index and maitaining database');
+    clearTrash;
     refreshFtIndex;
   end;
 
