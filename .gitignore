@@ -17,5 +17,6 @@ out/
 client/Mloc
 updatedb/updatedb
 tests/mloctests
+locate/locate
 *.fpcunit.ini
 *.dbg

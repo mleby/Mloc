@@ -14,6 +14,12 @@ cd ..
 
 echo
 echo ------------------------------------------------------------------
+cd locate
+lazbuild --build-all --build-mode=Release locate.lpr
+cd ..
+
+echo
+echo ------------------------------------------------------------------
 cd tests
 lazbuild --build-all -q mloctests.lpr
 ./mloctests
