@@ -85,7 +85,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-t program -s la -n"/>
+        <CommandLineParams Value="-t program -s la -n -m"/>
       </local>
     </RunParams>
     <Units Count="3">

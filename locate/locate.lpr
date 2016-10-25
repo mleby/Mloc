@@ -18,6 +18,7 @@ Type
   TLocate = Class(TCustomApplication)
   private
     Procedure writeStdResult;
+    Procedure writeIceMenuResult;
   protected
     Procedure DoRun; override;
   Public
@@ -34,6 +35,16 @@ Begin
   while not DM.SQLQueryResult.EOF do
   begin
     WriteLn(DM.getPath);
+    DM.SQLQueryResult.Next;
+  End;
+End;
+
+Procedure TLocate.writeIceMenuResult;
+Begin
+  DM.SQLQueryResult.First;
+  while not DM.SQLQueryResult.EOF do
+  begin
+    WriteLn('prog "' + DM.GetNamePath + '" NO_ICON ' + DM.getCommand + ' "' + DM.getPath + '"');
     DM.SQLQueryResult.Next;
   End;
 End;
@@ -86,8 +97,11 @@ Begin
 
   DM.DBSearch(lSearch, lPath, lTag);
 
-  if not lIceMenu then
+  if lIceMenu then
+    writeIceMenuResult
+  else
     writeStdResult;
+
 
 
   // stop program loop
