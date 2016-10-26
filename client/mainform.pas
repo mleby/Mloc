@@ -29,6 +29,7 @@ type
     btnSearch: TButton;
     Button1: TButton;
     btSettings: TButton;
+    chNormalize: TCheckBox;
     edPath: TEdit;
     edWhere: TEdit;
     edTag: TEdit;
@@ -42,7 +43,6 @@ type
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
-    NormalizeChb: TCheckBox;
     acRun: TAction;
     ActionList: TActionList;
     ResultDBGrid: TDBGrid;
@@ -62,6 +62,7 @@ type
     Procedure acEditExecute(Sender: TObject);
     Procedure acEditUpdate(Sender: TObject);
     Procedure acHelpExecute(Sender: TObject);
+    Procedure acNormalizeExecute(Sender: TObject);
     Procedure acOpenDirectoryExecute(Sender: TObject);
     Procedure acOpenDirectoryUpdate(Sender: TObject);
     procedure acRunExecute(Sender: TObject);
@@ -78,7 +79,6 @@ type
     procedure ResultDBGridKeyDown(Sender: TObject; var Key: word);
     procedure SearchEditChange(Sender: TObject);
     Procedure SearchEditKeyPress(Sender: TObject; Var Key: char);
-
   private
     FAutoQuery: Integer;
     FDelay: Integer;
@@ -92,6 +92,7 @@ type
     Procedure SetWhere(AValue: string);
 
   public
+    Constructor Create(TheOwner: TComponent); override;
     procedure Search(const force: Boolean);
 
     property Path: string read FPath write SetPath;
@@ -176,7 +177,7 @@ Begin
       if SearchEdit.Text <> '' then
       begin
         lSearchTerm := SearchEdit.Text;
-        if NormalizeChb.Checked then
+        if chNormalize.Checked then
         begin
           lSearchTerm := NormalizeTerm(lSearchTerm);
           lSearchTerm := StringReplace(lSearchTerm, ' ', '* ', [rfReplaceAll, rfIgnoreCase]);
@@ -210,6 +211,12 @@ Begin
   FWhere := AValue;
   edTag.Text := AValue;
   StatusBar.Panels[4].Text := 'Where: ' + AValue;
+End;
+
+Constructor TMainSearchForm.Create(TheOwner: TComponent);
+Begin
+  Inherited Create(TheOwner);
+
 End;
 
 
@@ -293,6 +300,13 @@ Begin
   Finally
     lShortcutHelpFrm.Free;
   End;
+end;
+
+Procedure TMainSearchForm.acNormalizeExecute(Sender: TObject);
+Begin
+  // acNormalize.Checked := not acNormalize.Checked;
+  //sbNormalize.down := acNormalize.Checked;
+  //sbNormalize.AllowAllUp := not acNormalize.Checked;
 end;
 
 Procedure TMainSearchForm.acOpenDirectoryExecute(Sender: TObject);
