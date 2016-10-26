@@ -22,6 +22,6 @@ echo
 echo ------------------------------------------------------------------
 cd tests
 lazbuild --build-all -q mloctests.lpr
-./mloctests
+./mloctests --format=plain -a -p
 cd ..
 

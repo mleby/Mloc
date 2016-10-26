@@ -5,17 +5,18 @@ unit uTools;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, strutils;
 
 function removeDiacritics(aStr: string): string;
 function NormalizeTerm(const aSearchTerm: string): string;
 function StripNonAlphaNumeric(const aValue: string): string;
 function CopyAndSplitCammelCaseString(const aValue: string): string;
+function GlobCheck(const aGlob, aValue: string): boolean;
 
 implementation
 
 uses
-  strutils, character;
+  character;
 
 function NormalizeTerm(const aSearchTerm: string): string;
 var
@@ -100,9 +101,9 @@ end;
 function CopyAndSplitCammelCaseString(const aValue: string): string;
 const
   ALPHA_CHARS = ['a'..'z', 'A'..'Z', '0'..'9'];
-Var
-  C, O: Char;
-  lUpraveno: String;
+var
+  C, O: char;
+  lUpraveno: string;
 begin
   O := ' ';
   Result := aValue;
@@ -112,10 +113,32 @@ begin
       lUpraveno := lUpraveno + ' ';
     lUpraveno := lUpraveno + C;
     O := C;
-  End;
+  end;
 
   if Result <> lUpraveno then
     Result := DelSpace1(Result + ' ' + lUpraveno);
+end;
+
+Function GlobCheck(Const aGlob, aValue: string): boolean;
+Var
+  lFirst, lLast: Char;
+  lStrip: String;
+Begin
+  lFirst := aGlob[1];
+  lLast := aGlob[Length(aGlob)];
+
+  if (lFirst = '*') and (lLast = '*') then
+  begin
+    lStrip := Copy(aGlob, 2, Length(aGlob) - 2);
+    Result := AnsiContainsText(aValue, lStrip);
+  //else if
+  End
+  else if (lFirst = '*') and (lLast <> '*') then
+  begin
+    lStrip := Copy(aGlob, 2, Length(aGlob));
+    Result := AnsiEndsText(lStrip, aValue);
+  End;
+
 end;
 
 end.

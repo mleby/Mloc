@@ -18,6 +18,7 @@ Type
   Published
     Procedure TestHookUp;
     Procedure TestCammelCase;
+    Procedure TestGlobCheck;
   End;
 
 Implementation
@@ -34,6 +35,21 @@ Begin
   AssertEquals('freeRapidDownloader free Rapid Downloader', CopyAndSplitCammelCaseString('freeRapidDownloader'));
   AssertEquals('freeRapid1Downloader ahoj free Rapid 1 Downloader ahoj', CopyAndSplitCammelCaseString('freeRapid1Downloader ahoj'));
 End;
+
+Procedure TTestCaseTools.TestGlobCheck;
+Begin
+  AssertTrue(GlobCheck('*aa*', 'aaaa'));
+  AssertFalse(GlobCheck('*ab*', 'aaaa'));
+
+  AssertTrue(GlobCheck('*aa', 'bbaa'));
+  AssertFalse(GlobCheck('*aa', 'bbaab'));
+  AssertFalse(GlobCheck('*aa', 'bbba'));
+
+  //AssertTrue(GlobCheck('aa*', 'bbaa'));
+  //AssertFalse(GlobCheck('*aa', 'bbba'));
+End;
+
+
 
 Procedure TTestCaseTools.SetUp;
 Begin

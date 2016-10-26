@@ -3,13 +3,25 @@ program mloctests;
 {$mode objfpc}{$H+}
 
 uses
-  Interfaces, Forms, GuiTestRunner, fpcunittestrunner, testcaseTools;
+  Classes, consoletestrunner, testcaseTools;
 
-{$R *.res}
+type
+
+  { TLazTestRunner }
+
+  TMyTestRunner = class(TTestRunner)
+  protected
+  // override the protected methods of TTestRunner to customize its behavior
+  end;
+
+var
+  Application: TMyTestRunner;
 
 begin
+  Application := TMyTestRunner.Create(nil);
   Application.Initialize;
-  Application.CreateForm(TGuiTestRunner, TestRunner);
+  Application.Title := 'FPCUnit Console test runner';
   Application.Run;
+  Application.Free;
 end.
 
