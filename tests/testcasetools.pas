@@ -19,6 +19,7 @@ Type
     Procedure TestHookUp;
     Procedure TestCammelCase;
     Procedure TestGlobCheck;
+    Procedure TestGlobCheckAll;
   End;
 
 Implementation
@@ -45,8 +46,19 @@ Begin
   AssertFalse(GlobCheck('*aa', 'bbaab'));
   AssertFalse(GlobCheck('*aa', 'bbba'));
 
-  //AssertTrue(GlobCheck('aa*', 'bbaa'));
-  //AssertFalse(GlobCheck('*aa', 'bbba'));
+  AssertTrue(GlobCheck('aa*', 'aabb'));
+  AssertFalse(GlobCheck('aa*', 'bbba'));
+
+  AssertTrue(GlobCheck('aa', 'aa'));
+  AssertTrue(GlobCheck('aa', 'AA'));
+  AssertFalse(GlobCheck('aa', 'ba'));
+End;
+
+Procedure TTestCaseTools.TestGlobCheckAll;
+Begin
+  AssertTrue(GlobCheckAll('*aa*:*cc', 'ddaadd'));
+  AssertTrue(GlobCheckAll('*xx*:*cc*', 'ddaaccdd'));
+  AssertFalse(GlobCheckAll('*xx*:*cc*', 'ddaacdd'));
 End;
 
 

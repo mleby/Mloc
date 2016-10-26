@@ -12,7 +12,7 @@ function IndexPath(const aPath: string; aAnnex: Boolean): longint;
 implementation
 
 uses
-  uAppContext, FileUtil, uIndexCmd, process, StreamIO, strutils;
+  uAppContext, FileUtil, uIndexCmd, uTools, process, StreamIO, strutils;
 
 function IndexPath(const aPath: string; aAnnex: Boolean): longint;
 var
@@ -58,38 +58,40 @@ begin
   try
     for i := 0 to lFiles.Count - 1 do
     begin
-      {TODO -oLebeda -cNone: include/exclude param}
-
-      insertFile(lFiles[i], aAnnex);
-      Inc(Result);
-
-      if (App.Avfs <> '') and (
-          AnsiEndsText('.zip', lFiles[i]) or
-          AnsiEndsText('.rar', lFiles[i]) or
-          AnsiEndsText('.tgz', lFiles[i]) or
-          AnsiEndsText('.tag.gz', lFiles[i]) or
-          AnsiEndsText('.tgz', lFiles[i]) or
-          AnsiEndsText('.tar.bz2', lFiles[i]) or
-          AnsiEndsText('.7z', lFiles[i]) or
-          AnsiEndsText('.jar', lFiles[i])
-        ) then
+      if ((App.include = '') or GlobCheckAll(App.include, lFiles[i]))
+        and ((App.exclude = '') or GlobCheckAll(App.exclude, lFiles[i])) then
       begin
-        lAvfsDirName := IncludeTrailingPathDelimiter(App.Avfs) + lFiles[i] + '#';
+        insertFile(lFiles[i], aAnnex);
+        Inc(Result);
 
-        {TODO -oLebeda -cNone: better avfs support - use date for update}
-        //long changed = f.lastModified()
-        //long indexed = (Long) (sql.firstRow("select min(updated) as indexed from sources WHERE path like ${avfsPath + "%"}").indexed ?: 0)
-        //if (changed > indexed) {
-        //    println("index from avfs: ${avfsPath}")
-        //    cnt += processCommandLineInternal("$CMD_DELREC ${avfsPath}")
-        //    cnt += processCommandLineInternal("$CMD_PATH ${avfsPath}")
-        //} else {
-        //    println("index from cache: ${avfsPath}")
-        //    sql.execute("update sources set trash = null where path like ${avfsPath + "%"}")
-        //}
+        if (App.Avfs <> '') and (
+            AnsiEndsText('.zip', lFiles[i]) or
+            AnsiEndsText('.rar', lFiles[i]) or
+            AnsiEndsText('.tgz', lFiles[i]) or
+            AnsiEndsText('.tag.gz', lFiles[i]) or
+            AnsiEndsText('.tgz', lFiles[i]) or
+            AnsiEndsText('.tar.bz2', lFiles[i]) or
+            AnsiEndsText('.7z', lFiles[i]) or
+            AnsiEndsText('.jar', lFiles[i])
+          ) then
+        begin
+          lAvfsDirName := IncludeTrailingPathDelimiter(App.Avfs) + lFiles[i] + '#';
 
-        IndexPath(lAvfsDirName, false)
-      end;
+          {TODO -oLebeda -cNone: better avfs support - use date for update}
+          //long changed = f.lastModified()
+          //long indexed = (Long) (sql.firstRow("select min(updated) as indexed from sources WHERE path like ${avfsPath + "%"}").indexed ?: 0)
+          //if (changed > indexed) {
+          //    println("index from avfs: ${avfsPath}")
+          //    cnt += processCommandLineInternal("$CMD_DELREC ${avfsPath}")
+          //    cnt += processCommandLineInternal("$CMD_PATH ${avfsPath}")
+          //} else {
+          //    println("index from cache: ${avfsPath}")
+          //    sql.execute("update sources set trash = null where path like ${avfsPath + "%"}")
+          //}
+
+          IndexPath(lAvfsDirName, false)
+        end;
+      End;
     end
   finally
     lFiles.Free;
@@ -99,9 +101,8 @@ begin
   try
     for i := 0 to lDirs.Count - 1 do
     begin
-      {TODO -oLebeda -cNone: include/exclude param}
-      //App.Log.Debug('Dir: ' + lDirs[i]);
-      Result := Result + IndexPath(lDirs[i], aAnnex);
+      if ((App.exclude = '') or GlobCheckAll(App.exclude, lFiles[i])) then
+        Result := Result + IndexPath(lDirs[i], aAnnex);
     end;
   finally
     lDirs.Free;

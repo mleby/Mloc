@@ -12,6 +12,7 @@ function NormalizeTerm(const aSearchTerm: string): string;
 function StripNonAlphaNumeric(const aValue: string): string;
 function CopyAndSplitCammelCaseString(const aValue: string): string;
 function GlobCheck(const aGlob, aValue: string): boolean;
+function GlobCheckAll(const aGlobList, aValue: string): boolean;
 
 implementation
 
@@ -137,8 +138,41 @@ Begin
   begin
     lStrip := Copy(aGlob, 2, Length(aGlob));
     Result := AnsiEndsText(lStrip, aValue);
+  End
+  else if (lFirst <> '*') and (lLast = '*') then
+  begin
+    lStrip := Copy(aGlob, 1, Length(aGlob) - 1);
+    Result := AnsiStartsText(lStrip, aValue);
+  End
+  else if (lFirst <> '*') and (lLast <> '*') then
+  begin
+    Result := SameText(aGlob, aValue);
   End;
+end;
 
+Function GlobCheckAll(Const aGlobList, aValue: string): boolean;
+var
+  sl: TStringList;
+  i: Integer;
+Begin
+  sl := TStringList.Create;
+  try
+    //sl.StrictDelimiter := true;
+    sl.Delimiter := ':';
+    sl.DelimitedText := aGlobList;
+
+    for i := 0 to sl.Count - 1 do
+    begin
+      if GlobCheck(sl[i], aValue) then
+      begin
+        Result := true;
+        break;
+      End;
+    End;
+
+  finally
+    sl.Free;
+  end;
 end;
 
 end.

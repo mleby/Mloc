@@ -24,6 +24,8 @@ type
     FVerbose: boolean;
     FPriority: integer;
     FLog: TLogger;
+    FInclude: string;
+    FExclude: string;
 
     function GetOptionValueDef(const aShort: char; const aLong, aDefault: string): string;
   protected
@@ -39,6 +41,8 @@ type
     property Avfs: string read FAvfs;
     property Tag: string read FTag;
     property Cmd: string read FCmd;
+    Property include: string Read FInclude;
+    Property exclude: String Read FExclude;
     property Priority: integer read FPriority;
     property Log: TLogger read FLog;
   end;
@@ -103,8 +107,8 @@ begin
   lStartTime := now;
 
   // include/exclude
-  {TODO -oLebeda -cNone: x exclude}
-  {TODO -oLebeda -cNone: include }
+  FInclude := GetOptionValueDef('x', 'exclude', '');
+  FExclude := GetOptionValueDef('_', 'include', '');
 
   DM.DBPath := GetOptionValueDef('l', 'localdb', IncludeTrailingPathDelimiter(GetUserDir) + '.mlocate.db');
   Log.Info('use DB: ' + DM.DBPath);
