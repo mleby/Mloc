@@ -16,7 +16,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
-      <BuildNr Value="15"/>
+      <BuildNr Value="25"/>
       <StringTable ProductVersion=""/>
     </VersionInfo>
     <BuildModes Count="3">
@@ -94,7 +94,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-l /tmp/prac.db -s 'hobit docx'"/>
+        <CommandLineParams Value="-h"/>
       </local>
     </RunParams>
     <RequiredPackages Count="4">

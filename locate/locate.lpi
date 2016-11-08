@@ -85,7 +85,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-t program -s la -n -m"/>
+        <CommandLineParams Value="-l /tmp/prac.db -t lazarus  -n -m"/>
       </local>
     </RunParams>
     <Units Count="3">
@@ -96,7 +96,9 @@
       <Unit1>
         <Filename Value="../client/umaindatamodule.pas"/>
         <IsPartOfProject Value="True"/>
+        <ComponentName Value="DM"/>
         <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
         <UnitName Value="uMainDataModule"/>
       </Unit1>
       <Unit2>

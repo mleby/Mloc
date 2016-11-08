@@ -8,6 +8,7 @@ uses
   Classes, SysUtils;
 
 function IndexPath(const aPath: string; aAnnex: Boolean): longint;
+function checkIncludeExcludeFile(const aPath: string): Boolean;
 
 implementation
 
@@ -43,8 +44,12 @@ begin
       while not Eof(F) do
       begin
          Readln(F, lLine);
-         insertFile(IncludeTrailingPathDelimiter(aPath) + lLine, aAnnex);
-         Inc(Result);
+         if checkIncludeExcludeFile(lLine) then
+         begin
+           //App.Log.Debug('Include: ' + lLine);
+           insertFile(IncludeTrailingPathDelimiter(aPath) + lLine, aAnnex);
+           Inc(Result);
+         End;
       End;
       CloseFile(F);
     finally
@@ -58,8 +63,7 @@ begin
   try
     for i := 0 to lFiles.Count - 1 do
     begin
-      if ((App.include = '') or GlobCheckAll(App.include, lFiles[i]))
-        and ((App.exclude = '') or GlobCheckAll(App.exclude, lFiles[i])) then
+      if checkIncludeExcludeFile(lFiles[i]) then
       begin
         insertFile(lFiles[i], aAnnex);
         Inc(Result);
@@ -107,6 +111,23 @@ begin
   finally
     lDirs.Free;
   end;
+end;
+
+Function checkIncludeExcludeFile(Const aPath: string): Boolean;
+Var
+  lInclude, lExclude: Boolean;
+  lIncludeStr, lExcludeStr: String;
+Begin
+  lIncludeStr := App.include;
+  lExcludeStr := App.exclude;
+
+  //App.Log.Debug('Include: ' + lIncludeStr);
+  //App.Log.Debug('Exclude: ' + lExcludeStr);
+
+  lInclude := (lIncludeStr = '') or GlobCheckAll(lIncludeStr, aPath);
+  lExclude := (lExcludeStr = '') or GlobCheckAll(lExcludeStr, aPath);
+
+  Result := lInclude and lExclude;
 end;
 
 end.

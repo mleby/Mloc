@@ -107,8 +107,12 @@ begin
   lStartTime := now;
 
   // include/exclude
-  FInclude := GetOptionValueDef('x', 'exclude', '');
-  FExclude := GetOptionValueDef('_', 'include', '');
+  FExclude := GetOptionValueDef('x', 'exclude', '');
+  FInclude := GetOptionValueDef('_', 'include', '');
+
+  App.Log.Debug('Cmd: ' + FCmd);
+  App.Log.Debug('Exclude: ' + FExclude);
+  App.Log.Debug('Include: ' + FInclude);
 
   DM.DBPath := GetOptionValueDef('l', 'localdb', IncludeTrailingPathDelimiter(GetUserDir) + '.mlocate.db');
   Log.Info('use DB: ' + DM.DBPath);
@@ -170,14 +174,20 @@ end;
 
 procedure TUpdateDb.WriteHelp;
 begin
-  writeln('Usage: ', ExeName, ' -h');
-  {TODO -oLebeda -cNone: Vypsání helpu}
-  //cli.i(longOpt: 'priority', 'Priority for scanned entries in results', args: 1, argName: 'priority')
-  //cli._(longOpt: 'git', 'if directory contain .git use "git ls-files" instead recursive direct listing')
-  //cli._(longOpt: 'avfs', 'Path to avfs mount', args: 1, argName: 'avfsPath')
-  //cli.c(longOpt: 'cmd', 'Command for open scanned entries', args: 1, argName: 'cmdname')
-  //cli.p(longOpt: "path", "Simple recursive add paths in arg to index")
-  // noreindex
+  writeln('Usage: ', ExeName);
+  writeln('    -h --help             show this help');
+  writeln('    -l --localdb          path to database file, default: $HOME/.mlocate.db');
+  writeln('    -c --cmd=XX           command for open scanned entries, default: xdg-open');
+  writeln('       --priority=X       priority for scanned entries in results, default: 50');
+  writeln('       --git=X            if directory contain .git use "git ls-files" instead recursive direct listing, this is external command git');
+  writeln('       --avfs=X           path to avfs mount');
+  writeln('    -v --verbose          verbose output');
+  writeln('    -d --debug            more verbose output');
+  writeln('    -t --tag              tag');
+  writeln('    -x --exclude          exclude from search (files and directories), use ":" as separator');
+  writeln('       --include          include to search (only files), use ":" as separator');
+  writeln('       --noreindex        no vacuum database (quicker indexation)');
+  writeln('    -p --path             list of paths for indexation, use ":" as separator');
 end;
 
 end.

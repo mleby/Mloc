@@ -44,7 +44,7 @@ Begin
   DM.SQLQueryResult.First;
   while not DM.SQLQueryResult.EOF do
   begin
-    WriteLn('prog "' + DM.GetNamePath + '" NO_ICON ' + DM.getCommand + ' "' + DM.getPath + '"');
+    WriteLn('prog "' + DM.getItemName + '" NO_ICON ' + DM.getCommand + ' "' + DM.getPath + '"');
     DM.SQLQueryResult.Next;
   End;
 End;
@@ -62,12 +62,12 @@ Begin
   //  Exit;
   //End;
 //
-//  // parse parameters
-//  If HasOption('h', 'help') Then Begin
-//    WriteHelp;
-//    Terminate;
-//    Exit;
-//  End;
+  // parse parameters
+  If HasOption('h', 'help') Then Begin
+    WriteHelp;
+    Terminate;
+    Exit;
+  End;
 
   { main program }
   if HasOption('l', 'localdb') then
@@ -86,12 +86,13 @@ Begin
   if HasOption('s', 'search') then
     lSearch := GetOptionValue('s', 'search');
 
-  if lNormalize then
-  begin
-    lSearch := NormalizeTerm(lSearch);
-    lSearch := StringReplace(lSearch, ' ', '* ', [rfReplaceAll, rfIgnoreCase]);
-    lSearch := Trim(lSearch + '*');
-  end;
+  if lSearch <> '' then
+    if lNormalize then
+    begin
+      lSearch := NormalizeTerm(lSearch);
+      lSearch := StringReplace(lSearch, ' ', '* ', [rfReplaceAll, rfIgnoreCase]);
+      lSearch := Trim(lSearch + '*');
+    end;
 
   lIceMenu := HasOption('m', 'icemenu');
 
@@ -122,7 +123,14 @@ End;
 Procedure TLocate.WriteHelp;
 Begin
   { add your help code here }
-  writeln('Usage: ', ExeName, ' -h');
+  writeln('Usage: ', ExeName);
+  writeln('    -h --help             show this help');
+  writeln('    -l --localdb          path to database file, default: $HOME/.mlocate.db');
+  writeln('    -n --normalize        normalize query pattern');
+  writeln('    -t --tag              tag');
+  writeln('    -p --path=X           paths for search'); 
+  writeln('    -s --search=X         pattern for search'); 
+  writeln('    -m --menu             format output as dynamic menu for icewm');
 End;
 
 Var

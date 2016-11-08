@@ -66,9 +66,6 @@
           </SearchPaths>
           <CodeGeneration>
             <SmartLinkUnit Value="True"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-            </Optimizations>
           </CodeGeneration>
           <Linking>
             <Debugging>
@@ -85,7 +82,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-l /tmp/prac.db -d --git=/usr/bin/git -p /tmp:/home/martin/Stažené:/home/martin/Knihovna:/home/martin/Marbes --noreindex"/>
+        <CommandLineParams Value="-h"/>
       </local>
     </RunParams>
     <RequiredPackages Count="2">

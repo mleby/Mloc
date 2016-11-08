@@ -32,6 +32,7 @@ type
     function getPath: string;
     function getDir: string;
     function getCommand: string;
+    function getItemName: string;
     function isAnnex: boolean;
     procedure DBSearch(const aSearchTerm, aPath, aTag: string);
     property DBPath: string read FDBPath write SetDBPath;
@@ -108,15 +109,16 @@ begin
 
   SQLite3Connection1.ExecuteDirect('create unique index if not exists sourcesUniq on sources (path, tag)');
   SQLite3Connection1.ExecuteDirect('create unique index if not exists sourcesUniq2 on sources (id, trash, tag)');
+  SQLite3Connection1.ExecuteDirect('create index if not exists sourcesTrashTag on sources (trash, tag)');
 
   SQLite3Connection1.Transaction.Commit;
 
   DM.SQLite3Connection1.ExecuteDirect('End Transaction');  // End the transaction started by SQLdb
   SQLite3Connection1.ExecuteDirect('PRAGMA synchronous=OFF');
-  SQLite3Connection1.ExecuteDirect('PRAGMA cache_size = -' + IntToStr(1024*1024*2)); // 2GB
-  SQLite3Connection1.ExecuteDirect('PRAGMA journal_mode=MEMORY');
-  SQLite3Connection1.ExecuteDirect('PRAGMA temp_store=2');
-  SQLite3Connection1.ExecuteDirect('PRAGMA PAGE_SIZE=4096');
+  // SQLite3Connection1.ExecuteDirect('PRAGMA cache_size = -' + IntToStr(1024*1024*2)); // 2GB
+  // SQLite3Connection1.ExecuteDirect('PRAGMA journal_mode=MEMORY');
+  // SQLite3Connection1.ExecuteDirect('PRAGMA temp_store=2');
+  // SQLite3Connection1.ExecuteDirect('PRAGMA PAGE_SIZE=4096');
   DM.SQLite3Connection1.ExecuteDirect('Begin Transaction'); //Start a transaction for SQLdb to use
 end;
 
@@ -147,6 +149,11 @@ Function TDM.getCommand: string;
 begin
   Result := SQLQueryResult.FieldByName('command').AsString;
 end;
+
+Function TDM.getItemName: string;
+Begin
+  Result := SQLQueryResult.FieldByName('name').AsString;
+End;
 
 Function TDM.isAnnex: boolean;
 Begin

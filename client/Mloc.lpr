@@ -13,8 +13,17 @@ Uses
 
 Begin
   if Application.HasOption('h', 'help') then begin
-    // TODO - vypsání helpu
-    Halt;
+    writeln('Usage: Mloc [options...]');
+    writeln('    -h --help             show this help');
+    writeln('    -l --localdb          path to database file, default: $HOME/.mlocate.db');
+    writeln('    -t --tag              tag');
+    writeln('    -p --path=X           paths for search'); 
+    writeln('    -s --search=X         pattern for search'); 
+    writeln('    -w --where=X          additional where part for search');
+    writeln('    -q --query            automatic run search after start'); 
+    writeln('    -d --delay=X          delay input for run automatic query in ms, default: 750');
+    writeln('    -a --auto=X           count of character in input for run automatic query, default: 3');
+    exit;
   end;
 
   RequireDerivedFormResource := True;
