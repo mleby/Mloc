@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, sqlite3conn, sqldb, DB, FileUtil, LConvEncoding, Forms, Controls,
   Graphics, Dialogs, StdCtrls, DBGrids, ActnList,
-  ComCtrls, ExtCtrls, Menus, Clipbrd, Buttons, LCLProc, uSettingsForm, uRunUtils, uRawDataSet;
+  ComCtrls, ExtCtrls, Menus, Clipbrd, Buttons, LCLProc, uSettingsForm, uRunUtils, uRawDataSet, Types;
 
 type
 

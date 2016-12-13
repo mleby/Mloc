@@ -71,6 +71,7 @@ procedure TUpdateDb.DoRun;
 //ErrorMsg: String;
 var
   lPaths: TStringList;
+  lLineIn: String;
   i: integer;
   lOptPath: string;
   lCnt: longint;
@@ -117,7 +118,15 @@ begin
   DM.DBPath := GetOptionValueDef('l', 'localdb', IncludeTrailingPathDelimiter(GetUserDir) + '.mlocate.db');
   Log.Info('use DB: ' + DM.DBPath);
 
-  //cli.s(longOpt: 'from-source', 'Update index from source files in arg')
+  {TODO -oLebeda -cNone: delete-tag}
+  {TODO -oLebeda -cNone: delete-path}
+
+  {TODO -oLebeda -cNone: stddin}
+  if HasOption('_', 'sdtdin') then
+  begin
+    readln(lLineIn);
+    writeln(lLineIn);
+  End;
 
   if HasOption('p', 'path') then
   begin

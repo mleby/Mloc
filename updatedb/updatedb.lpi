@@ -82,7 +82,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-h"/>
+        <CommandLineParams Value="-l /tmp/prac.db -t lazarus  --sdtdin -v -d"/>
       </local>
     </RunParams>
     <RequiredPackages Count="2">
