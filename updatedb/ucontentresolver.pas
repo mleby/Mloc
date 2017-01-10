@@ -109,7 +109,7 @@ end;
 
 procedure TDesktopResolver.GetValue(const lLine, aPrefix: string; var aVar: string);
 begin
-  if AnsiStartsStr(aPrefix, lLine) then
+  if AnsiStartsStr(aPrefix, lLine) and (aVar = '') then
   begin
     aVar := Copy(lLine, Pos('=', lLine) + 1, Length(lLine) - Pos('=', lLine));
   end;

@@ -17,6 +17,7 @@ Begin
     writeln('    -h --help             show this help');
     writeln('    -l --localdb          path to database file, default: $HOME/.mlocate.db');
     writeln('    -t --tag              tag');
+    writeln('    -k --keep             keep window after run action');
     writeln('    -p --path=X           paths for search'); 
     writeln('    -s --search=X         pattern for search'); 
     writeln('    -w --where=X          additional where part for search');
@@ -32,6 +33,13 @@ Begin
   Application.CreateForm(TsettingsForm, settingsForm);
   Application.CreateForm(TRunUtils, RunUtils);
   Application.CreateForm(TDM, DM);
+
+  if not Application.HasOption('k', 'keep') then
+  begin
+    MainSearchForm.KeepOpen := False;
+  End
+  else
+    MainSearchForm.KeepOpen := True;
 
   if Application.HasOption('d', 'delay') then
     MainSearchForm.Delay := StrToInt(Application.GetOptionValue('d', 'delay'))

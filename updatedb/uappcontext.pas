@@ -121,6 +121,14 @@ begin
   {TODO -oLebeda -cNone: delete-tag}
   {TODO -oLebeda -cNone: delete-path}
 
+  {TODO -oLebeda -cNone: source}
+  if HasOption('_', 'source') then
+  begin
+    readln(lLineIn);
+    // insertCmd(const aPath, aName, aCommand: string; const aAnnex:Boolean; const aDescription: string = '');
+    writeln(lLineIn);
+  End;
+
   {TODO -oLebeda -cNone: stddin}
   if HasOption('_', 'sdtdin') then
   begin

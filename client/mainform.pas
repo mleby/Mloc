@@ -85,11 +85,14 @@ type
     FPath: String;
     FTag: String;
     FWhere : String;
+    FKeepOpen: Boolean;
     Procedure SetAutoQuery(AValue: Integer);
     Procedure SetDelay(AValue: Integer);
+    Procedure SetKeepOpen(Const aValue: Boolean);
     procedure SetPath(aPath: string);
     procedure SetTag(aTag: string);
     Procedure SetWhere(AValue: string);
+    Procedure AppDeactivate(Sender: TObject);
 
   public
     Constructor Create(TheOwner: TComponent); override;
@@ -100,6 +103,7 @@ type
     property Where: string read FWhere write SetWhere;
     Property AutoQuery: Integer Read FAutoQuery Write SetAutoQuery;
     Property Delay: Integer Read FDelay Write SetDelay;
+    Property KeepOpen: Boolean Read FKeepOpen Write SetKeepOpen;
   end;
 
 var
@@ -147,6 +151,16 @@ Begin
   If FDelay = AValue Then Exit;
   FDelay := AValue;
   Timer1.Interval := AValue;
+End;
+
+Procedure TMainSearchForm.SetKeepOpen(Const aValue: Boolean);
+Begin
+  FKeepOpen := aValue;
+
+  if not FKeepOpen then
+    Application.OnDeactivate := @AppDeactivate
+  else
+    Application.OnDeactivate := nil;
 End;
 
 Procedure TMainSearchForm.SetTag(aTag: string);
@@ -211,6 +225,11 @@ Begin
   FWhere := AValue;
   edTag.Text := AValue;
   StatusBar.Panels[4].Text := 'Where: ' + AValue;
+End;
+
+Procedure TMainSearchForm.AppDeactivate(Sender: TObject);
+Begin
+  Self.Close;
 End;
 
 Constructor TMainSearchForm.Create(TheOwner: TComponent);

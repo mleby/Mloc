@@ -1,7 +1,7 @@
 object MainSearchForm: TMainSearchForm
-  Left = 438
+  Left = 336
   Height = 563
-  Top = 234
+  Top = 240
   Width = 1041
   ActiveControl = SearchEdit
   Caption = 'Search'

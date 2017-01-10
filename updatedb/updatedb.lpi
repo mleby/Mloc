@@ -82,7 +82,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-l /tmp/prac.db -t lazarus  --sdtdin -v -d"/>
+        <CommandLineParams Value="-t program -i 10 --cmd-open=exo-open -p /usr/share/applications/:/home/martin/.local/share/applications -d"/>
       </local>
     </RunParams>
     <RequiredPackages Count="2">
