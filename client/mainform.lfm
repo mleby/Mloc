@@ -1,12 +1,13 @@
 object MainSearchForm: TMainSearchForm
-  Left = 336
+  Left = 338
   Height = 563
-  Top = 240
+  Top = 241
   Width = 1041
   ActiveControl = SearchEdit
   Caption = 'Search'
   ClientHeight = 563
   ClientWidth = 1041
+  Color = 16185078
   Icon.Data = {
     BE1000000000010001002020000001002000A810000016000000280000002000
     0000400000000100200000000000001000006400000064000000000000000000
@@ -151,6 +152,7 @@ object MainSearchForm: TMainSearchForm
     Height = 19
     Top = 544
     Width = 1041
+    Color = clNone
     Panels = <    
       item
         Width = 200
@@ -167,7 +169,9 @@ object MainSearchForm: TMainSearchForm
       item
         Width = 500
       end>
+    ParentColor = False
     SimplePanel = False
+    Visible = False
   end
   object HeaderPanel: TPanel
     Left = 0
@@ -180,21 +184,32 @@ object MainSearchForm: TMainSearchForm
     ClientWidth = 1041
     TabOrder = 1
     object SearchEdit: TEdit
-      Left = 8
-      Height = 25
-      Top = 7
-      Width = 896
+      Left = 23
+      Height = 34
+      Top = 3
+      Width = 982
+      Align = alClient
       Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 20
+      BorderSpacing.Around = 3
+      BorderStyle = bsNone
+      Font.Height = -16
+      Font.Name = 'Sans'
       OnChange = SearchEditChange
       OnKeyPress = SearchEditKeyPress
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 0
+      TextHint = 'Search'
     end
     object SpeedButton1: TSpeedButton
-      Left = 1005
-      Height = 24
-      Top = 7
-      Width = 24
+      Left = 1008
+      Height = 40
+      Top = 0
+      Width = 33
       Action = acShowAdvanced
+      Align = alRight
       Anchors = [akTop, akRight]
       Flat = True
       Glyph.Data = {
@@ -233,16 +248,6 @@ object MainSearchForm: TMainSearchForm
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000
       }
-    end
-    object chNormalize: TCheckBox
-      Left = 904
-      Height = 21
-      Top = 9
-      Width = 90
-      Caption = 'Normalize'
-      Checked = True
-      State = cbChecked
-      TabOrder = 1
     end
   end
   object AdvancedPanel: TPanel
@@ -322,36 +327,73 @@ object MainSearchForm: TMainSearchForm
       Anchors = [akTop, akLeft, akRight]
       TabOrder = 4
     end
+    object chNormalize: TCheckBox
+      Left = 840
+      Height = 21
+      Top = 32
+      Width = 90
+      Caption = 'Normalize'
+      Checked = True
+      State = cbChecked
+      TabOrder = 5
+    end
   end
   object ResultDBGrid: TDBGrid
-    Left = 0
+    Left = 88
     Height = 408
     Top = 136
-    Width = 1041
+    Width = 950
     Align = alClient
     AutoEdit = False
-    Color = clWindow
+    BorderSpacing.Right = 3
+    BorderStyle = bsNone
+    Color = 16185078
     Columns = <    
-      item
-        Title.Caption = 'tag'
-        Width = 100
-        FieldName = 'tag'
-      end    
       item
         Title.Caption = 'name'
         Width = 400
         FieldName = 'name'
       end    
       item
+        Font.Color = clSilver
         Title.Caption = 'path'
         Width = 512
         FieldName = 'path'
       end>
     DataSource = DM.DataSource1
-    Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
+    FixedCols = 0
+    Options = [dgColumnResize, dgColumnMove, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgThumbTracking]
     PopupMenu = ResultPopUpMenu
     ReadOnly = True
+    Scrollbars = ssAutoBoth
     TabOrder = 3
+    OnDblClick = ResultDBGridDblClick
+    OnKeyDown = ResultDBGridKeyDown
+  end
+  object ResultDBGridIcon: TDBGrid
+    Left = 3
+    Height = 408
+    Top = 136
+    Width = 85
+    Align = alLeft
+    AutoEdit = False
+    BorderSpacing.Left = 3
+    BorderStyle = bsNone
+    Color = 16185078
+    Columns = <    
+      item
+        Font.Color = clSilver
+        Title.Caption = 'tag'
+        Width = 100
+        FieldName = 'tag'
+      end>
+    DataSource = DM.DataSource1
+    FixedCols = 0
+    Options = [dgColumnResize, dgColumnMove, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgThumbTracking]
+    PopupMenu = ResultPopUpMenu
+    ReadOnly = True
+    Scrollbars = ssNone
+    TabOrder = 4
     OnDblClick = ResultDBGridDblClick
     OnKeyDown = ResultDBGridKeyDown
   end

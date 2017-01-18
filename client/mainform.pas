@@ -46,10 +46,11 @@ type
     acRun: TAction;
     ActionList: TActionList;
     ResultDBGrid: TDBGrid;
-    SpeedButton1: TSpeedButton;
     AdvancedPanel: TPanel;
+    ResultDBGridIcon: TDBGrid;
     ResultPopUpMenu: TPopupMenu;
     SearchEdit: TEdit;
+    SpeedButton1: TSpeedButton;
     StatusBar: TStatusBar;
     Timer1: TTimer;
     procedure acAppEndExecute(Sender: TObject);
@@ -236,6 +237,8 @@ Constructor TMainSearchForm.Create(TheOwner: TComponent);
 Begin
   Inherited Create(TheOwner);
 
+  //ResultDBGridIcon.AutoFillColumns := True;
+  //ResultDBGrid.AutoFillColumns := True;
 End;
 
 
@@ -391,6 +394,7 @@ end;
 Procedure TMainSearchForm.acShowAdvancedExecute(Sender: TObject);
 Begin
   AdvancedPanel.Visible := not AdvancedPanel.Visible;
+  StatusBar.Visible := not StatusBar.Visible;
 end;
 
 Procedure TMainSearchForm.acTerminalExecute(Sender: TObject);
