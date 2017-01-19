@@ -50,6 +50,7 @@ type
     ResultDBGridIcon: TDBGrid;
     ResultPopUpMenu: TPopupMenu;
     SearchEdit: TEdit;
+    Shape1: TShape;
     SpeedButton1: TSpeedButton;
     StatusBar: TStatusBar;
     Timer1: TTimer;

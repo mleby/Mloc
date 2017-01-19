@@ -4,6 +4,7 @@ object MainSearchForm: TMainSearchForm
   Top = 241
   Width = 1041
   ActiveControl = SearchEdit
+  BorderStyle = bsNone
   Caption = 'Search'
   ClientHeight = 563
   ClientWidth = 1041
@@ -185,7 +186,7 @@ object MainSearchForm: TMainSearchForm
     TabOrder = 1
     object SearchEdit: TEdit
       Left = 23
-      Height = 34
+      Height = 33
       Top = 3
       Width = 982
       Align = alClient
@@ -205,7 +206,7 @@ object MainSearchForm: TMainSearchForm
     end
     object SpeedButton1: TSpeedButton
       Left = 1008
-      Height = 40
+      Height = 39
       Top = 0
       Width = 33
       Action = acShowAdvanced
@@ -248,6 +249,15 @@ object MainSearchForm: TMainSearchForm
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000
       }
+    end
+    object Shape1: TShape
+      Left = 0
+      Height = 1
+      Top = 39
+      Width = 1041
+      Align = alBottom
+      Brush.Color = clMedGray
+      Pen.Color = clMedGray
     end
   end
   object AdvancedPanel: TPanel
