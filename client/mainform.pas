@@ -263,25 +263,28 @@ var
   lIconName, lTag: string;
 Begin
   lTag := ResultDBGridIcon.DataSource.DataSet.FieldByName('tag').AsString;
-  lIconName := GetEnvironmentVariable('HOME') + '/.mlocate.icons/' + lTag + '.png';
-
-  if FileExists(lIconName) then
-  with ResultDBGridIcon.Canvas do
+  if lTag <> '' then
   begin
-    fillRect(rect);
-    bmpImage := TPicture.Create;
-    try
-      if FileExists(lIconName) then
-        bmpImage.LoadFromFile(lIconName)
-      else
-        bmpImage.Clear;
+    lIconName := GetEnvironmentVariable('HOME') + '/.mlocate.icons/' + lTag + '.png';
 
-      Draw(Rect.Left+2, Rect.Top+2, bmpImage.Bitmap);
-      //Column.Width := MainGridIcon.DefaultRowHeight;
-    finally
-      bmpimage.Free;
+    if FileExists(lIconName) then
+    with ResultDBGridIcon.Canvas do
+    begin
+      fillRect(rect);
+      bmpImage := TPicture.Create;
+      try
+        if FileExists(lIconName) then
+          bmpImage.LoadFromFile(lIconName)
+        else
+          bmpImage.Clear;
+
+        Draw(Rect.Left+2, Rect.Top+2, bmpImage.Bitmap);
+        //Column.Width := MainGridIcon.DefaultRowHeight;
+      finally
+        bmpimage.Free;
+      end;
     end;
-  end;
+  End;
 end;
 
 Procedure TMainSearchForm.ResultDBGridKeyDown(Sender: TObject; Var Key: word);
