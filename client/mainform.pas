@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, sqlite3conn, sqldb, DB, FileUtil, LConvEncoding, Forms, Controls,
   Graphics, Dialogs, StdCtrls, DBGrids, ActnList,
-  ComCtrls, ExtCtrls, Menus, Clipbrd, Buttons, LCLProc, uSettingsForm, uRunUtils, uRawDataSet, Types;
+  ComCtrls, ExtCtrls, Menus, Clipbrd, Buttons, LCLProc, uSettingsForm, uRunUtils, uRawDataSet, Types, Grids;
 
 type
 
@@ -52,6 +52,7 @@ type
     SearchEdit: TEdit;
     Shape1: TShape;
     SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
     StatusBar: TStatusBar;
     Timer1: TTimer;
     procedure acAppEndExecute(Sender: TObject);
@@ -78,6 +79,7 @@ type
     Procedure IdleTimer1Timer(Sender: TObject);
     procedure ResultDBGridDblClick(Sender: TObject);
     procedure acRunUpdate(Sender: TObject);
+    Procedure ResultDBGridIconDrawColumnCell(Sender: TObject; Const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure ResultDBGridKeyDown(Sender: TObject; var Key: word);
     procedure SearchEditChange(Sender: TObject);
     Procedure SearchEditKeyPress(Sender: TObject; Var Key: char);
@@ -252,6 +254,34 @@ end;
 Procedure TMainSearchForm.acRunUpdate(Sender: TObject);
 begin
   (Sender as TAction).Enabled := (DM.SQLQueryResult.RecordCount > 0);
+end;
+
+Procedure TMainSearchForm.ResultDBGridIconDrawColumnCell(Sender: TObject; Const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+var
+  bmpImage: TPicture;
+  lIconName, lTag: string;
+Begin
+  lTag := ResultDBGridIcon.DataSource.DataSet.FieldByName('tag').AsString;
+  lIconName := GetEnvironmentVariable('HOME') + '/.mlocate.icons/' + lTag + '.png';
+
+  if FileExists(lIconName) then
+  with ResultDBGridIcon.Canvas do
+  begin
+    fillRect(rect);
+    bmpImage := TPicture.Create;
+    try
+      if FileExists(lIconName) then
+        bmpImage.LoadFromFile(lIconName)
+      else
+        bmpImage.Clear;
+
+      Draw(Rect.Left+2, Rect.Top+2, bmpImage.Bitmap);
+      //Column.Width := MainGridIcon.DefaultRowHeight;
+    finally
+      bmpimage.Free;
+    end;
+  end;
 end;
 
 Procedure TMainSearchForm.ResultDBGridKeyDown(Sender: TObject; Var Key: word);
