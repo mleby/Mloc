@@ -70,12 +70,14 @@ procedure TUpdateDb.DoRun;
 //Var
 //ErrorMsg: String;
 var
-  lPaths: TStringList;
+  lPaths, lList: TStringList;
   lLineIn: String;
   i: integer;
-  lOptPath: string;
+  lOptPath, lOptList, s: string;
   lCnt: longint;
   lStartTime: TDateTime;
+  lListPath: string;
+  tfIn: TextFile;
 begin
   lCnt := 0;
 
@@ -127,6 +129,45 @@ begin
     readln(lLineIn);
     // insertCmd(const aPath, aName, aCommand: string; const aAnnex:Boolean; const aDescription: string = '');
     writeln(lLineIn);
+  End;
+
+  // list from txt
+  if HasOption('_', 'list') then
+  begin
+    lList := TStringList.Create();
+    try
+      lList.Delimiter := ':';
+      lOptList := GetOptionValue('_', 'list');
+      lList.DelimitedText := lOptList;
+
+      for i := 0 to lList.Count - 1 do
+      begin
+        App.Log.Info('indexing from list: ' + lList[i]);
+        lListPath := ExtractFileDir(lList[i]);
+        markPathAsTrash(lListPath);
+
+        // Index line by line
+        AssignFile(tfIn, lList[i]);
+        try
+          reset(tfIn);
+          while not eof(tfIn) do
+          begin
+            readln(tfIn, s);
+            insertFile(IncludeTrailingPathDelimiter(lListPath) + s, false); // for this method is annex unsupported
+            Inc(lCnt);
+          end;
+          CloseFile(tfIn);
+        except
+          on E: EInOutError do
+           App.Log.Err('File handling error occurred. Details: ' + E.Message);
+        end;
+
+        DM.SQLite3Connection1.Transaction.Commit;
+      end;
+
+    finally
+      lList.Free;
+    end;
   End;
 
   {TODO -oLebeda -cNone: stddin}
