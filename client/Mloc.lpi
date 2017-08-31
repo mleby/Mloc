@@ -94,7 +94,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-k"/>
+        <CommandLineParams Value="-k -n cuttings"/>
       </local>
     </RunParams>
     <RequiredPackages Count="4">

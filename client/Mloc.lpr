@@ -24,6 +24,7 @@ Begin
     writeln('    -q --query            automatic run search after start'); 
     writeln('    -d --delay=X          delay input for run automatic query in ms, default: 750');
     writeln('    -a --auto=X           count of character in input for run automatic query, default: 3');
+    writeln('    -n --name=X           set title for window, default: search');
     exit;
   end;
 
@@ -74,6 +75,9 @@ Begin
 
   if Application.HasOption('q', 'query') then // q query
      MainSearchForm.Search(true);
+
+  if Application.HasOption('n', 'name') then
+     MainSearchForm.Caption := Application.GetOptionValue('n', 'name');
 
   Application.Run;
 End.
