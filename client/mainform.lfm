@@ -146,6 +146,7 @@ object MainSearchForm: TMainSearchForm
     0000000000000000000000000000000000000000000000000000000000000000
     0000
   }
+  OnResize = FormResize
   Position = poScreenCenter
   LCLVersion = '1.6.0.4'
   object StatusBar: TStatusBar
@@ -540,6 +541,12 @@ object MainSearchForm: TMainSearchForm
       Hint = 'Show raw dataset of results'
       OnExecute = acDsExecute
       ShortCut = 49220
+    end
+    object acShowHidePathColumn: TAction
+      Caption = 'Show path column'
+      Hint = 'Show/hide path column in result'
+      OnExecute = acShowHidePathColumnExecute
+      ShortCut = 114
     end
   end
   object ResultPopUpMenu: TPopupMenu

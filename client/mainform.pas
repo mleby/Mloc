@@ -26,6 +26,7 @@ type
     acShowAdvanced: TAction;
     acSettings: TAction;
     acDs: TAction;
+    acShowHidePathColumn: TAction;
     btnSearch: TButton;
     Button1: TButton;
     btSettings: TButton;
@@ -74,9 +75,11 @@ type
     procedure acDownToListingExecute(Sender: TObject);
     Procedure acSettingsExecute(Sender: TObject);
     Procedure acShowAdvancedExecute(Sender: TObject);
+    Procedure acShowHidePathColumnExecute(Sender: TObject);
     Procedure acTerminalExecute(Sender: TObject);
     Procedure acTerminalUpdate(Sender: TObject);
     Procedure btnSearchClick(Sender: TObject);
+    Procedure FormResize(Sender: TObject);
     Procedure IdleTimer1Timer(Sender: TObject);
     procedure ResultDBGridDblClick(Sender: TObject);
     procedure acRunUpdate(Sender: TObject);
@@ -88,13 +91,16 @@ type
     FAutoQuery: Integer;
     FDelay: Integer;
     FPath: String;
+    FShowFile: Boolean;
     FTag: String;
     FWhere : String;
     FKeepOpen: Boolean;
+    Procedure ResizeResultGridColumn;
     Procedure SetAutoQuery(AValue: Integer);
     Procedure SetDelay(AValue: Integer);
     Procedure SetKeepOpen(Const aValue: Boolean);
     procedure SetPath(aPath: string);
+    Procedure SetShowFile(Const aValue: Boolean);
     procedure SetTag(aTag: string);
     Procedure SetWhere(AValue: string);
     Procedure AppDeactivate(Sender: TObject);
@@ -109,6 +115,7 @@ type
     Property AutoQuery: Integer Read FAutoQuery Write SetAutoQuery;
     Property Delay: Integer Read FDelay Write SetDelay;
     Property KeepOpen: Boolean Read FKeepOpen Write SetKeepOpen;
+    Property ShowFile: Boolean Read FShowFile Write SetShowFile;
   end;
 
 var
@@ -145,10 +152,27 @@ begin
   StatusBar.Panels[2].Text := FPath;
 end;
 
+Procedure TMainSearchForm.SetShowFile(Const aValue: Boolean);
+Begin
+  If FShowFile = aValue Then Exit;
+  FShowFile := aValue;
+End;
+
 Procedure TMainSearchForm.SetAutoQuery(AValue: Integer);
 Begin
   If FAutoQuery = AValue Then Exit;
   FAutoQuery := AValue;
+End;
+
+Procedure TMainSearchForm.ResizeResultGridColumn;
+Begin
+  if ResultDBGrid.Columns[1].Visible then
+  begin
+    ResultDBGrid.Columns[0].Width := ResultDBGrid.Width Div 2;
+    ResultDBGrid.Columns[1].Width := ResultDBGrid.Width Div 2;
+  End
+  else
+    ResultDBGrid.Columns[0].Width := ResultDBGrid.Width;
 End;
 
 Procedure TMainSearchForm.SetDelay(AValue: Integer);
@@ -222,6 +246,8 @@ Begin
       DM.SQLQueryResult.Close;
       StatusBar.Panels[0].Text := 'min chars of query: ' + IntToStr(AutoQuery);
     End;
+
+    ResizeResultGridColumn;
 End;
 
 Procedure TMainSearchForm.SetWhere(AValue: string);
@@ -243,6 +269,7 @@ Begin
 
   //ResultDBGridIcon.AutoFillColumns := True;
   //ResultDBGrid.AutoFillColumns := True;
+  ResultDBGrid.Columns[1].Visible := ShowFile;
 End;
 
 
@@ -438,6 +465,12 @@ Begin
   StatusBar.Visible := not StatusBar.Visible;
 end;
 
+Procedure TMainSearchForm.acShowHidePathColumnExecute(Sender: TObject);
+Begin
+  ResultDBGrid.Columns[1].Visible := not ResultDBGrid.Columns[1].Visible;
+  ResizeResultGridColumn;
+end;
+
 Procedure TMainSearchForm.acTerminalExecute(Sender: TObject);
 Begin
   if DM.getDir <> '' then
@@ -455,6 +488,11 @@ end;
 Procedure TMainSearchForm.btnSearchClick(Sender: TObject);
 Begin
   Search(true);
+end;
+
+Procedure TMainSearchForm.FormResize(Sender: TObject);
+Begin
+  ResizeResultGridColumn;
 end;
 
 Procedure TMainSearchForm.IdleTimer1Timer(Sender: TObject);
