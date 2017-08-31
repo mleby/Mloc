@@ -56,6 +56,7 @@ type
     StatusBar: TStatusBar;
     Timer1: TTimer;
     procedure acAppEndExecute(Sender: TObject);
+    Procedure acAppEndUpdate(Sender: TObject);
     Procedure acCopyPathExecute(Sender: TObject);
     Procedure acCopyPathUpdate(Sender: TObject);
     Procedure acCommanderExecute(Sender: TObject);
@@ -299,7 +300,8 @@ begin
     RunUtils.RunSync(settingsForm.AnnexCmd, settingsForm.AnnexParams, DM.getDir, DM.getPath, '');
 
   RunUtils.RunAsync(DM.getCommand, '%p', DM.getDir, DM.getPath, '');
-  MainSearchForm.Close;
+  if not FKeepOpen then
+    MainSearchForm.Close;
 end;
 
 Procedure TMainSearchForm.acDownToListingUpdate(Sender: TObject);
@@ -382,6 +384,11 @@ end;
 Procedure TMainSearchForm.acAppEndExecute(Sender: TObject);
 begin
   Self.Close;
+end;
+
+Procedure TMainSearchForm.acAppEndUpdate(Sender: TObject);
+Begin
+  (Sender as TAction).Enabled := not FKeepOpen;
 end;
 
 Procedure TMainSearchForm.acCopyPathExecute(Sender: TObject);

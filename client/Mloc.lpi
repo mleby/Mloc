@@ -94,6 +94,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
+        <CommandLineParams Value="-k"/>
       </local>
     </RunParams>
     <RequiredPackages Count="4">

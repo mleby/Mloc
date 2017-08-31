@@ -245,6 +245,7 @@ begin
   writeln('    -x --exclude          exclude from search (files and directories), use ":" as separator');
   writeln('       --include          include to search (only files), use ":" as separator');
   writeln('       --noreindex        no vacuum database (quicker indexation)');
+  writeln('       --list=XX:YY       list from index file (file contain relative path listing)');
   writeln('    -p --path             list of paths for indexation, use ":" as separator');
 end;
 

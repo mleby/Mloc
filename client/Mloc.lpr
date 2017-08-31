@@ -7,7 +7,7 @@ Uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, MainForm, shortcutHelpForm, uSettingsForm, uRunUtils, uTools, uMainDataModule, sysutils, uRawDataSet;
+  Forms, MainForm, shortcutHelpForm, uSettingsForm, uRunUtils, uTools, uMainDataModule, sysutils, uRawDataSet, Controls;
 
 {$R *.res}
 
@@ -39,7 +39,11 @@ Begin
     MainSearchForm.KeepOpen := False;
   End
   else
+  begin
     MainSearchForm.KeepOpen := True;
+    MainSearchForm.BorderStyle := bsSizeable;
+    MainSearchForm.Position := poDefaultPosOnly;
+  End;
 
   if Application.HasOption('d', 'delay') then
     MainSearchForm.Delay := StrToInt(Application.GetOptionValue('d', 'delay'))

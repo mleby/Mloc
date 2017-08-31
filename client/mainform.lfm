@@ -480,6 +480,7 @@ object MainSearchForm: TMainSearchForm
       Caption = 'acAppEnd'
       Hint = 'Close application'
       OnExecute = acAppEndExecute
+      OnUpdate = acAppEndUpdate
       ShortCut = 27
     end
     object acOpenDirectory: TAction
