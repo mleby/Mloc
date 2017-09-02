@@ -26,14 +26,17 @@ var
 
 implementation
 
+Const
+  BEGIN_SL = 0;
+
 {$R *.lfm}
 
 { TRunUtils }
 
 Procedure TRunUtils.RunAsync(Const aCmd, aParams, aDir, aPath, aName: string);
 var
-  sl: TStringList;
-  lParams: string;
+  sl, slCmd: TStringList;
+  lParams, lCmd: string;
 begin
   // replace macros
   if aDir <> '' then
@@ -47,20 +50,28 @@ begin
 
   sl := TStringList.Create;
   try
+    slCmd := tStringList.Create;
+    slCmd.Delimiter := ' ';
+    slCmd.DelimitedText := aCmd;
+    lCmd := slCmd[BEGIN_SL];
+    slCmd.Delete(BEGIN_SL);
+
     //sl.StrictDelimiter := true;
     sl.Delimiter := ' ';
     sl.DelimitedText := lParams;
+    slCmd.AddStrings(sl);
 
     // execute process
     if aDir <> '' then
       runAsyncProcess.CurrentDirectory := aDir;
 
-    runAsyncProcess.Executable := aCmd;
+    runAsyncProcess.Executable := lCmd;
     runAsyncProcess.Parameters.Clear;
-    runAsyncProcess.Parameters.AddStrings(sl);
+    runAsyncProcess.Parameters.AddStrings(slCmd);
     runAsyncProcess.Execute;
 
   finally
+    FreeAndNil(slCmd);
     sl.Free;
   end;
 end;
