@@ -82,7 +82,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-l /tmp/prac.db -t archive --cmd-open=exo-open -d --list=/media/martin/ARCHIVE/archive/index.txt"/>
+        <CommandLineParams Value="-l /tmp/prac.db --cmd-open=exo-open -d -m /home/martin/.icewm/toolbar:/home/martin/.icewm/menu"/>
       </local>
     </RunParams>
     <RequiredPackages Count="2">
@@ -93,7 +93,7 @@
         <PackageName Value="SQLDBLaz"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="8">
+    <Units Count="9">
       <Unit0>
         <Filename Value="updatedb.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -136,6 +136,11 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="uContentResolver"/>
       </Unit7>
+      <Unit8>
+        <Filename Value="umenuitem.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="uMenuItem"/>
+      </Unit8>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

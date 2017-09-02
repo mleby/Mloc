@@ -5,7 +5,7 @@ unit uMainDataModule;
 interface
 
 uses
-  Classes, SysUtils, sqlite3conn, sqldb, DB;
+  Classes, SysUtils, sqlite3conn, sqldb, DB, strutils;
 
 type
 
@@ -43,15 +43,21 @@ var
 
 implementation
 
-Uses sqlite3, strutils;
+Uses sqlite3;
 
 {$R *.lfm}
 
 { TDM }
 
 Function TDM.getPath: string;
+var
+  lPath: String;
 begin
-  Result := SQLQueryResult.FieldByName('path').AsString;
+  lPath := SQLQueryResult.FieldByName('path').AsString;
+  if lPath[1] <> '#' then
+    Result := lPath
+  else
+    Result := '';
 end;
 
 Function TDM.getDir: string;

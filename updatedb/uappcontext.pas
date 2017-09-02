@@ -8,7 +8,7 @@ uses
   {$IFDEF UNIX}{$IFDEF UseCThreads}
   cthreads,
   {$ENDIF}{$ENDIF}
-  Classes, SysUtils, uMainDataModule, CustApp, uConsoleOutput, uIndexPath;
+  Classes, SysUtils, uMainDataModule, CustApp, uConsoleOutput, uIndexPath, uIndexMenu;
 
 type
 
@@ -198,6 +198,28 @@ begin
     end;
   end;
 
+  if HasOption('m', 'menu') then
+  begin
+    lPaths := TStringList.Create();
+    try
+      lPaths.Delimiter := ':';
+      lOptPath := GetOptionValue('m', 'menu');
+      lPaths.DelimitedText := lOptPath;
+
+      for i := 0 to lPaths.Count - 1 do
+      begin
+        Log.Info('indexing menu: ' + lPaths[i]);
+        {TODO -oLebeda -cNone: pokud path začíná # nepoužít při spuštění}
+        markPathAsTrash('#' + lPaths[i] + '#');
+        lCnt := lCnt + IndexMenu(lPaths[i]);
+        DM.SQLite3Connection1.Transaction.Commit;
+      end;
+
+    finally
+      lPaths.Free;
+    end;
+  end;
+
   //cli._(longOpt: 'noreindex', 'ignore fulltext reindexation (for use in batch update)')
   if HasOption('noreindex') then
   begin
@@ -247,6 +269,7 @@ begin
   writeln('       --noreindex        no vacuum database (quicker indexation)');
   writeln('       --list=XX:YY       list from index file (file contain relative path listing)');
   writeln('    -p --path             list of paths for indexation, use ":" as separator');
+  writeln('    -m --menu             list of commands from menu file (icewm syntax supported) for indexation, use ":" as separator');
 end;
 
 end.
