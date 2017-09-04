@@ -548,6 +548,12 @@ object MainSearchForm: TMainSearchForm
       OnExecute = acShowHidePathColumnExecute
       ShortCut = 114
     end
+    object acPin: TAction
+      Caption = 'Keep open'
+      Hint = 'Switch window status to keep open'
+      OnExecute = acPinExecute
+      ShortCut = 121
+    end
   end
   object ResultPopUpMenu: TPopupMenu
     left = 576

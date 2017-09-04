@@ -37,16 +37,8 @@ Begin
   Application.CreateForm(TRunUtils, RunUtils);
   Application.CreateForm(TDM, DM);
 
-  if not Application.HasOption('k', 'keep') then
-  begin
-    MainSearchForm.KeepOpen := False;
-  End
-  else
-  begin
-    MainSearchForm.KeepOpen := True;
-    MainSearchForm.BorderStyle := bsSizeable;
-    MainSearchForm.Position := poDefaultPosOnly;
-  End;
+  if Application.HasOption('k', 'keep') then
+    MainSearchForm.KeepOpen := Application.HasOption('k', 'keep');
 
   if Application.HasOption('d', 'delay') then
     MainSearchForm.Delay := StrToInt(Application.GetOptionValue('d', 'delay'))

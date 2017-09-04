@@ -27,6 +27,7 @@ type
     acSettings: TAction;
     acDs: TAction;
     acShowHidePathColumn: TAction;
+    acPin: TAction;
     btnSearch: TButton;
     Button1: TButton;
     btSettings: TButton;
@@ -70,6 +71,7 @@ type
     Procedure acNormalizeExecute(Sender: TObject);
     Procedure acOpenDirectoryExecute(Sender: TObject);
     Procedure acOpenDirectoryUpdate(Sender: TObject);
+    Procedure acPinExecute(Sender: TObject);
     procedure acRunExecute(Sender: TObject);
     procedure acSearchEditFocusExecute(Sender: TObject);
     procedure acDownToListingExecute(Sender: TObject);
@@ -185,6 +187,17 @@ End;
 Procedure TMainSearchForm.SetKeepOpen(Const aValue: Boolean);
 Begin
   FKeepOpen := aValue;
+
+  if FKeepOpen then
+  begin
+    MainSearchForm.BorderStyle := bsSizeable;
+    MainSearchForm.Position := poDefaultPosOnly;
+  End
+  else
+  begin
+    MainSearchForm.BorderStyle := bsNone;
+    MainSearchForm.Position := poScreenCenter;
+  End;
 
   if not FKeepOpen then
     Application.OnDeactivate := @AppDeactivate
@@ -367,10 +380,12 @@ var
   i: Integer;
   lShortcutHelpFrm: TshortcutHelpFrm;
   lHint, lShortCut: String;
+  sl : TStringList;
 Begin
   lShortcutHelpFrm := TshortcutHelpFrm.Create(self);
   try
     lShortcutHelpFrm.TextMemo.Lines.Clear;
+    sl := TStringList.Create;
 
     for i := 0 to ActionList.ActionCount - 1 do
     begin
@@ -378,9 +393,11 @@ Begin
       lShortCut := ShortCutToText((ActionList.Actions[i] as TAction).ShortCut);
 
       if lShortCut <> '' then
-         lShortcutHelpFrm.TextMemo.Lines.Append(lShortCut + ' : ' + lHint);
+        sl.Append(lShortCut + ' : ' + lHint);
     end;
 
+    sl.Sort;
+    lShortcutHelpFrm.TextMemo.Lines.AddStrings(sl);
     lShortcutHelpFrm.ShowModal;
   Finally
     lShortcutHelpFrm.Free;
@@ -406,6 +423,12 @@ Procedure TMainSearchForm.acOpenDirectoryUpdate(Sender: TObject);
 Begin
   (Sender as TAction).Enabled := (DM.SQLQueryResult.RecordCount > 0)
         and (DM.getPath <> '') and (settingsForm.FilemanagerCmd <> '');
+end;
+
+Procedure TMainSearchForm.acPinExecute(Sender: TObject);
+Begin
+  if not KeepOpen then
+    MainSearchForm.KeepOpen := not MainSearchForm.KeepOpen;
 end;
 
 Procedure TMainSearchForm.acAppEndExecute(Sender: TObject);
