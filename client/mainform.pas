@@ -28,6 +28,7 @@ type
     acDs: TAction;
     acShowHidePathColumn: TAction;
     acPin: TAction;
+    acShowStatusBar: TAction;
     btnSearch: TButton;
     Button1: TButton;
     btSettings: TButton;
@@ -80,6 +81,7 @@ type
     Procedure acShowHidePathColumnExecute(Sender: TObject);
     Procedure acTerminalExecute(Sender: TObject);
     Procedure acTerminalUpdate(Sender: TObject);
+    Procedure acShowStatusBarExecute(Sender: TObject);
     Procedure btnSearchClick(Sender: TObject);
     Procedure FormResize(Sender: TObject);
     Procedure IdleTimer1Timer(Sender: TObject);
@@ -506,6 +508,11 @@ Procedure TMainSearchForm.acTerminalUpdate(Sender: TObject);
 Begin
   (Sender as TAction).Enabled := (DM.SQLQueryResult.RecordCount > 0)
         and (DM.getPath <> '') and (settingsForm.TerminalCmd <> '');
+end;
+
+Procedure TMainSearchForm.acShowStatusBarExecute(Sender: TObject);
+Begin
+  StatusBar.Visible := not StatusBar.Visible;
 end;
 
 Procedure TMainSearchForm.btnSearchClick(Sender: TObject);
