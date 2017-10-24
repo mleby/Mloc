@@ -85,7 +85,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-l /tmp/prac.db -t lazarus  -n -m"/>
+        <CommandLineParams Value="-n -t program -m"/>
       </local>
     </RunParams>
     <Units Count="3">

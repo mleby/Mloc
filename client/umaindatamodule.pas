@@ -32,6 +32,7 @@ type
     function getPath: string;
     function getDir: string;
     function getCommand: string;
+    function getIcon: String;
     function getItemName: string;
     function isAnnex: boolean;
     procedure DBSearch(const aSearchTerm, aPath, aTag: string);
@@ -95,7 +96,7 @@ begin
 
   // create database structure if not exists
   SQLite3Connection1.Transaction.Active := True;
-  SQLite3Connection1.ExecuteDirect('CREATE TABLE IF NOT EXISTS sources (id PRIMARY KEY, path NOT NULL, name NOT NULL, search NOT NULL, command, updated, tag NOT NULL, priority NOT NULL, trash, annex NOT NULL, description)');
+  SQLite3Connection1.ExecuteDirect('CREATE TABLE IF NOT EXISTS sources (id PRIMARY KEY, path NOT NULL, name NOT NULL, search NOT NULL, command, updated, tag NOT NULL, priority NOT NULL, trash, annex NOT NULL, description, icon)');
   SQLite3Connection1.ExecuteDirect('CREATE INDEX IF NOT EXISTS tagIndex ON sources (tag)');
   SQLite3Connection1.ExecuteDirect('CREATE INDEX IF NOT EXISTS trashIndex ON sources (trash)');
 
@@ -155,6 +156,27 @@ Function TDM.getCommand: string;
 begin
   Result := SQLQueryResult.FieldByName('command').AsString;
 end;
+
+Function TDM.getIcon: String;
+Var
+  lTag, lIconName: String;
+Begin
+  Result := SQLQueryResult.FieldByName('icon').AsString;
+
+  if Result = '' then
+  begin
+    lTag := SQLQueryResult.FieldByName('tag').AsString;
+    if lTag <> '' then
+    begin
+      lIconName := GetEnvironmentVariable('HOME') + '/.mlocate.icons/' + lTag + '.png';
+
+      if FileExists(lIconName) then
+        Result := lIconName;
+    End;
+  End;
+
+  if Result = '' then Result := 'NOICON';
+End;
 
 Function TDM.getItemName: string;
 Begin

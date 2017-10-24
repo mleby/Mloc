@@ -82,7 +82,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-l /tmp/prac.db --cmd-open=exo-open -d -m /home/martin/.icewm/toolbar:/home/martin/.icewm/menu"/>
+        <CommandLineParams Value="-l /tmp/prac.db --cmd-open=exo-open -d -p /usr/share/applications/:/home/martin/.local/share/applications"/>
       </local>
     </RunParams>
     <RequiredPackages Count="2">

@@ -10,7 +10,7 @@ uses
 procedure markPathAsTrash(const aPath: string);
 procedure deleteTag;
 procedure insertFile(const aFileName: string; Const aAnnex: Boolean);
-procedure insertCmd(const aPath, aName, aCommand: string; const aAnnex:Boolean; const aDescription: string = '');
+procedure insertCmd(const aPath, aName, aCommand: string; const aAnnex:Boolean; const aDescription: string = ''; const aIcon: string = '');
 Procedure refreshFtIndex;
 Procedure clearTrash;
 
@@ -44,10 +44,10 @@ Var
   lContentResolver: IContentResolver;
 begin
   lContentResolver := NewContentResolver(aFileName);
-  insertCmd(lContentResolver.GetPath, lContentResolver.GetName, App.Cmd, aAnnex, lContentResolver.GetDescription);
+  insertCmd(lContentResolver.GetPath, lContentResolver.GetName, App.Cmd, aAnnex, lContentResolver.GetDescription, lContentResolver.GetIcon);
 end;
 
-Procedure insertCmd(Const aPath, aName, aCommand: string; Const aAnnex: Boolean; Const aDescription: string);
+Procedure insertCmd(Const aPath, aName, aCommand: string; Const aAnnex: Boolean; Const aDescription: string; Const aIcon: string);
 var
   lGuid: TGUID;
   lSearch: string;
@@ -72,6 +72,7 @@ begin
   DM.insertSQLQuery.ParamByName('trash').AsBoolean := false;
   DM.insertSQLQuery.ParamByName('annex').AsBoolean := aAnnex;
   DM.insertSQLQuery.ParamByName('description').AsString := aDescription;
+  DM.insertSQLQuery.ParamByName('icon').AsString := aIcon;
   DM.insertSQLQuery.ExecSQL;
 end;
 

@@ -44,7 +44,7 @@ Begin
   DM.SQLQueryResult.First;
   while not DM.SQLQueryResult.EOF do
   begin
-    WriteLn('prog "' + DM.getItemName + '" NO_ICON ' + DM.getCommand + ' "' + DM.getPath + '"');
+    WriteLn('prog "' + DM.getItemName + '" "' + DM.getIcon + '" ' + DM.getCommand + ' "' + DM.getPath + '"');
     DM.SQLQueryResult.Next;
   End;
 End;

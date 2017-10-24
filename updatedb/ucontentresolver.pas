@@ -16,6 +16,7 @@ type
     function GetPath: string;
     function GetName: string;
     function GetDescription: string;
+    function GetIcon: string;
   end;
 
   { TBaseResolver }
@@ -28,6 +29,7 @@ type
     function GetPath: string; virtual;
     function GetName: string; virtual;
     function GetDescription: string; virtual;
+    function GetIcon: string; virtual;
   end;
 
   { TDesktopResolver }
@@ -40,12 +42,14 @@ type
     FComment: string;
     FCommentCz: string;
     FKeywords: string;
+    FIcon: string;
     procedure GetValue(const lLine, aPrefix: string; var aVar: string);
   public
     constructor Create(const aFileName: string);
     function GetPath: string;
     function GetName: string;
     function GetDescription: string;
+    function GetIcon: string;
   end;
 
   { TMhtResolver }
@@ -105,9 +109,14 @@ begin
   Result := '';
 end;
 
+function TBaseResolver.GetIcon: string;
+begin
+  Result := '';
+end;
+
 { TDesktopResolver }
 
-procedure TDesktopResolver.GetValue(const lLine, aPrefix: string; var aVar: string);
+Procedure TDesktopResolver.GetValue(Const lLine, aPrefix: string; Var aVar: string);
 begin
   if AnsiStartsStr(aPrefix, lLine) and (aVar = '') then
   begin
@@ -115,7 +124,7 @@ begin
   end;
 end;
 
-constructor TDesktopResolver.Create(const aFileName: string);
+Constructor TDesktopResolver.Create(Const aFileName: string);
 var
   F: Text;
   lLine: string;
@@ -133,18 +142,19 @@ begin
       GetValue(lLine, 'Comment=', FComment);
       GetValue(lLine, 'Comment[cz]=', FCommentCz);
       GetValue(lLine, 'Keywords=', FKeywords);
+      GetValue(lLine, 'Icon=', FIcon);
     end;
   finally
     Close(F);
   end;
 end;
 
-function TDesktopResolver.GetPath: string;
+Function TDesktopResolver.GetPath: string;
 begin
   Result := FFileName;
 end;
 
-function TDesktopResolver.GetName: string;
+Function TDesktopResolver.GetName: string;
 begin
   if FName <> '' then
     Result := FName
@@ -154,11 +164,16 @@ begin
   //WriteLn(Result);
 end;
 
-function TDesktopResolver.GetDescription: string;
+Function TDesktopResolver.GetDescription: string;
 begin
   Result := FName + ' ' + FNameCz + ' ' + FComment + ' ' + FCommentCz + ' ' + FKeywords + ' ' + ExtractFileName(FFileName);
   //WriteLn(Result);
 end;
+
+Function TDesktopResolver.GetIcon: string;
+Begin
+  Result := FIcon;
+End;
 
 end.
 

@@ -53,7 +53,7 @@ begin
           else
             lName := lMenuItemParser.cmd;
 
-          insertCmd('#' + aPath + '#/' + lMenuItemParser.cmd, lName, lMenuItemParser.cmd, false);
+          insertCmd('#' + aPath + '#/' + lMenuItemParser.cmd, lName, lMenuItemParser.cmd, false, '', lMenuItemParser.icon);
           Inc(Result);
         End;
       finally
