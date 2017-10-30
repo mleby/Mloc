@@ -85,7 +85,7 @@
     <RunParams>
       <local>
         <FormatVersion Value="1"/>
-        <CommandLineParams Value="-n -t program -m"/>
+        <CommandLineParams Value="-n -m -a /home/martin/bin/annex-open -s &quot;obrazy lá&quot;"/>
       </local>
     </RunParams>
     <Units Count="3">

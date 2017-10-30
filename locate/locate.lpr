@@ -17,6 +17,7 @@ Type
 
   TLocate = Class(TCustomApplication)
   private
+    FAnnexOpen: String;
     Procedure writeStdResult;
     Procedure writeIceMenuResult;
   protected
@@ -40,11 +41,17 @@ Begin
 End;
 
 Procedure TLocate.writeIceMenuResult;
+Var
+  lAnnex: String;
 Begin
   DM.SQLQueryResult.First;
   while not DM.SQLQueryResult.EOF do
   begin
-    WriteLn('prog "' + DM.getItemName + '" "' + DM.getIcon + '" ' + DM.getCommand + ' "' + DM.getPath + '"');
+    lAnnex := '';
+    if DM.isAnnex and (FAnnexOpen <> '') then
+      lAnnex := FAnnexOpen;
+
+    WriteLn('prog "' + DM.getItemName + '" "' + DM.getIcon + '" ' + lAnnex + ' ' + DM.getCommand + ' "' + DM.getPath + '"');
     DM.SQLQueryResult.Next;
   End;
 End;
@@ -82,6 +89,9 @@ Begin
 
   if HasOption('p', 'path') then
     lPath := GetOptionValue('p', 'path');
+
+  if HasOption('a', 'annex') then
+    FAnnexOpen := GetOptionValue('a', 'annex');
 
   if HasOption('s', 'search') then
     lSearch := GetOptionValue('s', 'search');
